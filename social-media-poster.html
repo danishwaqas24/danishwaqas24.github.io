@@ -31,7 +31,48 @@
         .poster-container {
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             transition: all 0.3s ease;
+            position: relative;
+            cursor: default;
         }
+        
+        .poster-container.dragging {
+            cursor: move;
+        }
+        
+        /* Draggable Elements */
+        .draggable-element {
+            position: absolute;
+            cursor: move;
+            user-select: none;
+            transition: box-shadow 0.2s;
+        }
+        
+        .draggable-element:hover {
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.5);
+        }
+        
+        .draggable-element.selected {
+            box-shadow: 0 0 0 3px #667eea;
+        }
+        
+        .resize-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            display: none;
+        }
+        
+        .draggable-element.selected .resize-handle {
+            display: block;
+        }
+        
+        .resize-handle.nw { top: -6px; left: -6px; cursor: nw-resize; }
+        .resize-handle.ne { top: -6px; right: -6px; cursor: ne-resize; }
+        .resize-handle.sw { bottom: -6px; left: -6px; cursor: sw-resize; }
+        .resize-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
         
         .pattern-dots {
             background-image: radial-gradient(circle, rgba(255,255,255,0.2) 1.5px, transparent 1.5px);
@@ -165,6 +206,22 @@
             font-size: 12px;
             color: rgba(255,255,255,0.5);
             font-family: 'Inter', sans-serif;
+        }
+        
+        /* Export Quality Selector */
+        .quality-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quality-btn.active {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
         }
     </style>
 </head>
@@ -319,6 +376,16 @@
                     <button onclick="removeImage()" class="mt-2 text-sm text-red-500 hover:text-red-700 font-medium">Remove Image</button>
                 </div>
 
+                <!-- Export Quality -->
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="font-bold text-gray-800 mb-4 uppercase text-sm tracking-wide">Export Quality</h3>
+                    <div class="flex gap-2 mb-2">
+                        <button onclick="setQuality('hd')" class="quality-btn active flex-1" data-quality="hd">HD (1080p)</button>
+                        <button onclick="setQuality('4k')" class="quality-btn flex-1" data-quality="4k">4K (2160p)</button>
+                    </div>
+                    <p class="text-xs text-gray-500">Higher quality = larger file size</p>
+                </div>
+
                 <!-- Actions -->
                 <div class="space-y-3">
                     <button onclick="downloadPoster()" class="btn-primary w-full py-4 rounded-xl text-white font-bold text-lg flex items-center justify-center gap-2">
@@ -355,12 +422,18 @@
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                             </div>
                             
-                            <div class="absolute top-6 right-6 w-20 h-20 border-4 border-white/20 rounded-full animate-float"></div>
-                            <div class="absolute bottom-6 left-6 w-16 h-16 bg-white/10 rounded-2xl rotate-12 animate-float" style="animation-delay: 1s;"></div>
-                            <div class="absolute top-1/4 left-8 w-3 h-3 bg-white/60 rounded-full animate-pulse"></div>
-                            <div class="absolute top-1/3 right-12 w-2 h-2 bg-white/80 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+                            <!-- Draggable Text Elements -->
+                            <div id="textContainer" class="absolute inset-0 pointer-events-none">
+                                <!-- Elements will be added here dynamically -->
+                            </div>
                             
-                            <div class="relative z-10 max-w-full px-4">
+                            <div class="absolute top-6 right-6 w-20 h-20 border-4 border-white/20 rounded-full animate-float pointer-events-none"></div>
+                            <div class="absolute bottom-6 left-6 w-16 h-16 bg-white/10 rounded-2xl rotate-12 animate-float pointer-events-none" style="animation-delay: 1s;"></div>
+                            <div class="absolute top-1/4 left-8 w-3 h-3 bg-white/60 rounded-full animate-pulse pointer-events-none"></div>
+                            <div class="absolute top-1/3 right-12 w-2 h-2 bg-white/80 rounded-full animate-pulse pointer-events-none" style="animation-delay: 0.5s;"></div>
+                            
+                            <!-- Static Content (for backward compatibility) -->
+                            <div class="relative z-10 max-w-full px-4 pointer-events-none" id="staticContent">
                                 <h1 id="posterHeadline" class="text-6xl font-black text-white mb-4 drop-shadow-2xl font-bebas leading-none tracking-wide">
                                     YOUR<br>HEADLINE
                                 </h1>
@@ -374,6 +447,11 @@
                             
                             <div class="watermark" id="watermark">Made with PosterPro</div>
                         </div>
+                    </div>
+                    
+                    <!-- Drag Instructions -->
+                    <div class="mt-4 text-center text-sm text-gray-500">
+                        <p>💡 <strong>New:</strong> Click "Add Draggable Text" to create movable elements</p>
                     </div>
                     
                     <div class="mt-6 grid grid-cols-3 gap-4 w-full max-w-2xl text-sm">
@@ -530,6 +608,13 @@ const sizes = {
 
 let downloadCount = 5;
 let isPro = false;
+let exportQuality = 'hd'; // 'hd' or '4k'
+
+// Draggable elements array
+let draggableElements = [];
+let selectedElement = null;
+let isDragging = false;
+let dragOffset = { x: 0, y: 0 };
 
 // Functions
 function setSize(platform) {
@@ -560,6 +645,12 @@ function togglePattern(type) {
     el.className = "absolute inset-0 pointer-events-none opacity-30";
     if (type === "dots") el.classList.add("pattern-dots");
     else if (type === "grid") el.classList.add("pattern-grid");
+}
+
+function setQuality(quality) {
+    exportQuality = quality;
+    document.querySelectorAll(".quality-btn").forEach(b => b.classList.remove("active"));
+    document.querySelector(`[data-quality="${quality}"]`).classList.add("active");
 }
 
 function updateText() {
@@ -614,6 +705,130 @@ function removeImage() {
     document.getElementById("imageUpload").value = "";
 }
 
+// ==================== DRAG & DROP ====================
+
+function createDraggableElement(type, content, x, y) {
+    const container = document.getElementById("textContainer");
+    const el = document.createElement("div");
+    el.className = "draggable-element pointer-events-auto";
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    el.dataset.id = Date.now();
+    el.dataset.type = type;
+    
+    if (type === "text") {
+        el.innerHTML = `
+            <div class="content text-4xl font-bold text-white drop-shadow-lg" style="font-family: 'Bebas Neue', sans-serif;">${content}</div>
+            <div class="resize-handle nw"></div>
+            <div class="resize-handle ne"></div>
+            <div class="resize-handle sw"></div>
+            <div class="resize-handle se"></div>
+        `;
+    }
+    
+    // Event listeners
+    el.addEventListener("mousedown", startDrag);
+    el.addEventListener("touchstart", startDragTouch, { passive: false });
+    
+    container.appendChild(el);
+    draggableElements.push(el);
+    selectElement(el);
+    
+    return el;
+}
+
+function startDrag(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const el = e.currentTarget;
+    selectElement(el);
+    isDragging = true;
+    
+    const rect = el.getBoundingClientRect();
+    const parent = el.offsetParent.getBoundingClientRect();
+    
+    dragOffset.x = e.clientX - rect.left;
+    dragOffset.y = e.clientY - rect.top;
+    
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("mouseup", stopDrag);
+}
+
+function startDragTouch(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const touch = e.touches[0];
+    const el = e.currentTarget;
+    selectElement(el);
+    isDragging = true;
+    
+    const rect = el.getBoundingClientRect();
+    
+    dragOffset.x = touch.clientX - rect.left;
+    dragOffset.y = touch.clientY - rect.top;
+    
+    document.addEventListener("touchmove", dragTouch, { passive: false });
+    document.addEventListener("touchend", stopDragTouch);
+}
+
+function drag(e) {
+    if (!isDragging || !selectedElement) return;
+    e.preventDefault();
+    
+    const parent = selectedElement.offsetParent;
+    const parentRect = parent.getBoundingClientRect();
+    
+    let x = e.clientX - parentRect.left - dragOffset.x;
+    let y = e.clientY - parentRect.top - dragOffset.y;
+    
+    // Bounds
+    x = Math.max(0, Math.min(parent.offsetWidth - selectedElement.offsetWidth, x));
+    y = Math.max(0, Math.min(parent.offsetHeight - selectedElement.offsetHeight, y));
+    
+    selectedElement.style.left = x + "px";
+    selectedElement.style.top = y + "px";
+}
+
+function dragTouch(e) {
+    if (!isDragging || !selectedElement) return;
+    e.preventDefault();
+    
+    const touch = e.touches[0];
+    const parent = selectedElement.offsetParent;
+    const parentRect = parent.getBoundingClientRect();
+    
+    let x = touch.clientX - parentRect.left - dragOffset.x;
+    let y = touch.clientY - parentRect.top - dragOffset.y;
+    
+    x = Math.max(0, Math.min(parent.offsetWidth - selectedElement.offsetWidth, x));
+    y = Math.max(0, Math.min(parent.offsetHeight - selectedElement.offsetHeight, y));
+    
+    selectedElement.style.left = x + "px";
+    selectedElement.style.top = y + "px";
+}
+
+function stopDrag() {
+    isDragging = false;
+    document.removeEventListener("mousemove", drag);
+    document.removeEventListener("mouseup", stopDrag);
+}
+
+function stopDragTouch() {
+    isDragging = false;
+    document.removeEventListener("touchmove", dragTouch);
+    document.removeEventListener("touchend", stopDragTouch);
+}
+
+function selectElement(el) {
+    draggableElements.forEach(e => e.classList.remove("selected"));
+    el.classList.add("selected");
+    selectedElement = el;
+}
+
+// ==================== HIGH QUALITY EXPORT ====================
+
 function downloadPoster() {
     if (downloadCount <= 0 && !isPro) {
         alert("You've used all free downloads! Upgrade to Pro for unlimited posters.");
@@ -633,11 +848,35 @@ function downloadPoster() {
         watermark.style.display = "none";
     }
     
-    html2canvas(poster, { scale: 3, useCORS: true, backgroundColor: null }).then(canvas => {
+    // Calculate scale based on quality
+    const scale = exportQuality === '4k' ? 5.4 : 2.7; // 4K or HD (1080p)
+    
+    // Temporarily hide selection boxes
+    const selections = document.querySelectorAll(".draggable-element.selected");
+    selections.forEach(el => el.classList.remove("selected"));
+    
+    html2canvas(poster, { 
+        scale: scale,
+        useCORS: true,
+        backgroundColor: null,
+        logging: false,
+        allowTaint: true,
+        imageTimeout: 0
+    }).then(canvas => {
+        // Restore selections
+        selections.forEach(el => el.classList.add("selected"));
+        
+        // Create download
         const link = document.createElement("a");
-        link.download = "poster-" + Date.now() + ".png";
-        link.href = canvas.toDataURL("image/png");
+        const quality = exportQuality === '4k' ? '4K' : 'HD';
+        link.download = `poster-${quality}-${Date.now()}.png`;
+        link.href = canvas.toDataURL("image/png", 1.0);
         link.click();
+        
+        showToast(`Downloaded in ${quality} quality!`);
+    }).catch(err => {
+        console.error("Export error:", err);
+        alert("Error exporting. Please try again.");
     });
 }
 
@@ -671,6 +910,11 @@ function resetAll() {
     updateTextSize(64);
     document.getElementById("textColor").value = "#ffffff";
     updateTextColor("#ffffff");
+    
+    // Clear draggable elements
+    document.getElementById("textContainer").innerHTML = "";
+    draggableElements = [];
+    selectedElement = null;
 }
 
 // Navigation
@@ -688,6 +932,15 @@ function showSignup() {
 
 function showVideo() {
     alert("Demo video coming soon!");
+}
+
+function showToast(message) {
+    // Simple toast notification
+    const toast = document.createElement("div");
+    toast.className = "fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full text-sm z-50";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
 }
 
 // Initialize
