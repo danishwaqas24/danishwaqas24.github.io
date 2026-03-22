@@ -65,8 +65,8 @@
             font-variant-numeric: tabular-nums;
         }
         .reveal {
-            opacity: 0;
-            transform: translateY(30px);
+            opacity: 1;
+            transform: translateY(0);
             transition: all 0.8s ease;
         }
         .reveal.active {
@@ -128,7 +128,7 @@
     <section id="home" class="hero-bg pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="reveal active active">
+                <div class="reveal active">
                     <div class="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
                         🚀 Available for New Projects
                     </div>
@@ -158,7 +158,7 @@
                         <span>Trusted by 50+ clients worldwide</span>
                     </div>
                 </div>
-                <div class="relative reveal active active">
+                <div class="relative reveal active">
                     <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl transform rotate-3"></div>
                     <div class="relative bg-white p-4 rounded-2xl shadow-2xl float-animation">
                         <div class="bg-gray-100 rounded-xl overflow-hidden aspect-video flex items-center justify-center">
@@ -190,19 +190,19 @@
     <section class="bg-primary py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-                <div class="reveal active">
+                <div class="reveal">
                     <div class="text-4xl md:text-5xl font-bold counter mb-2" data-target="50">0</div>
                     <div class="text-blue-200">Projects Completed</div>
                 </div>
-                <div class="reveal active">
+                <div class="reveal">
                     <div class="text-4xl md:text-5xl font-bold counter mb-2" data-target="4">0</div>
                     <div class="text-blue-200">Years Experience</div>
                 </div>
-                <div class="reveal active">
+                <div class="reveal">
                     <div class="text-4xl md:text-5xl font-bold counter mb-2" data-target="100">0</div>
                     <div class="text-blue-200">% Satisfaction</div>
                 </div>
-                <div class="reveal active">
+                <div class="reveal">
                     <div class="text-4xl md:text-5xl font-bold counter mb-2" data-target="24">0</div>
                     <div class="text-blue-200">Hour Response Time</div>
                 </div>
@@ -213,14 +213,14 @@
     <!-- Services Section -->
     <section id="services" class="py-20 lg:py-32">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16 reveal active">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
                 <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4">Services That Drive <span class="text-secondary">Results</span></h2>
                 <p class="text-gray-600 text-lg">Everything you need to transform your blog into a professional, revenue-generating platform</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Service 1 -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover reveal active border border-gray-100">
+                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover reveal border border-gray-100">
                     <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
                         <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                     </div>
@@ -245,7 +245,7 @@
                 </div>
 
                 <!-- Service 2 -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover reveal active border border-gray-100">
+                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover reveal border border-gray-100">
                     <div class="w-14 h-14 bg-secondary/10 rounded-xl flex items-center justify-center mb-6">
                         <svg class="w-7 h-7 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                     </div>
@@ -270,7 +270,7 @@
                 </div>
 
                 <!-- Service 3 -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover reveal active border border-gray-100">
+                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover reveal border border-gray-100">
                     <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
                         <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
@@ -295,7 +295,7 @@
                 </div>
 
                 <!-- Service 4 -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover reveal active border border-gray-100">
+                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover reveal border border-gray-100">
                     <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
                         <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </div>
@@ -325,13 +325,13 @@
     <!-- Portfolio Section -->
     <section id="portfolio" class="py-20 lg:py-32 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12 reveal active">
+            <div class="text-center max-w-3xl mx-auto mb-12 reveal">
                 <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4">Featured <span class="text-secondary">Work</span></h2>
                 <p class="text-gray-600 text-lg">Real results for real clients. Every project is crafted for maximum conversion.</p>
             </div>
 
             <!-- Filter Buttons -->
-            <div class="flex flex-wrap justify-center gap-3 mb-12 reveal active">
+            <div class="flex flex-wrap justify-center gap-3 mb-12 reveal">
                 <button onclick="filterPortfolio('all')" class="filter-btn active px-6 py-2 rounded-full border border-primary text-sm font-medium transition-all hover:bg-primary hover:text-white" data-filter="all">All Work</button>
                 <button onclick="filterPortfolio('blogger')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary text-sm font-medium transition-all hover:bg-primary hover:text-white" data-filter="blogger">Blogger Design</button>
                 <button onclick="filterPortfolio('landing')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary text-sm font-medium transition-all hover:bg-primary hover:text-white" data-filter="landing">Landing Pages</button>
@@ -341,7 +341,7 @@
             <!-- Portfolio Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-grid">
                 <!-- Project 1 -->
-                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal active" data-category="blogger">
+                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal" data-category="blogger">
                     <div class="aspect-video bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
                         <div class="text-center text-white p-6">
                             <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
@@ -359,7 +359,7 @@
                 </div>
 
                 <!-- Project 2 -->
-                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal active" data-category="landing">
+                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal" data-category="landing">
                     <div class="aspect-video bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
                         <div class="text-center text-white p-6">
                             <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -377,7 +377,7 @@
                 </div>
 
                 <!-- Project 3 -->
-                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal active" data-category="affiliate">
+                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal" data-category="affiliate">
                     <div class="aspect-video bg-gradient-to-br from-green-400 to-teal-600 flex items-center justify-center">
                         <div class="text-center text-white p-6">
                             <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -395,7 +395,7 @@
                 </div>
 
                 <!-- Project 4 -->
-                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal active" data-category="blogger">
+                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal" data-category="blogger">
                     <div class="aspect-video bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center">
                         <div class="text-center text-white p-6">
                             <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -413,7 +413,7 @@
                 </div>
 
                 <!-- Project 5 -->
-                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal active" data-category="landing">
+                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal" data-category="landing">
                     <div class="aspect-video bg-gradient-to-br from-indigo-400 to-blue-600 flex items-center justify-center">
                         <div class="text-center text-white p-6">
                             <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
@@ -431,7 +431,7 @@
                 </div>
 
                 <!-- Project 6 -->
-                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal active" data-category="affiliate">
+                <div class="portfolio-item group relative overflow-hidden rounded-2xl shadow-lg reveal" data-category="affiliate">
                     <div class="aspect-video bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
                         <div class="text-center text-white p-6">
                             <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -454,14 +454,14 @@
     <!-- Testimonials Section -->
     <section class="py-20 lg:py-32 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16 reveal active">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
                 <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4">What Clients <span class="text-secondary">Say</span></h2>
                 <p class="text-gray-600 text-lg">Don't just take my word for it. Here's what my clients have achieved.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Testimonial 1 -->
-                <div class="bg-gray-50 rounded-2xl p-8 reveal active border border-gray-100 relative">
+                <div class="bg-gray-50 rounded-2xl p-8 reveal border border-gray-100 relative">
                     <div class="absolute -top-4 left-8 w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-lg">"</div>
                     <div class="flex items-center gap-4 mb-6">
                         <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold">JD</div>
@@ -481,7 +481,7 @@
                 </div>
 
                 <!-- Testimonial 2 -->
-                <div class="bg-gray-50 rounded-2xl p-8 reveal active border border-gray-100 relative">
+                <div class="bg-gray-50 rounded-2xl p-8 reveal border border-gray-100 relative">
                     <div class="absolute -top-4 left-8 w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-lg">"</div>
                     <div class="flex items-center gap-4 mb-6">
                         <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-white font-bold">SM</div>
@@ -501,7 +501,7 @@
                 </div>
 
                 <!-- Testimonial 3 -->
-                <div class="bg-gray-50 rounded-2xl p-8 reveal active border border-gray-100 relative">
+                <div class="bg-gray-50 rounded-2xl p-8 reveal border border-gray-100 relative">
                     <div class="absolute -top-4 left-8 w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-lg">"</div>
                     <div class="flex items-center gap-4 mb-6">
                         <div class="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center text-white font-bold">AK</div>
@@ -526,14 +526,14 @@
     <!-- Pricing Section -->
     <section id="pricing" class="py-20 lg:py-32 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16 reveal active">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
                 <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4">Transparent <span class="text-secondary">Pricing</span></h2>
                 <p class="text-gray-600 text-lg">Choose the package that fits your needs. Custom quotes available for complex projects.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 <!-- Basic Package -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg reveal active border border-gray-100 flex flex-col">
+                <div class="bg-white rounded-2xl p-8 shadow-lg reveal border border-gray-100 flex flex-col">
                     <div class="mb-6">
                         <h3 class="font-heading text-xl font-bold text-gray-600 mb-2">Starter</h3>
                         <div class="flex items-baseline gap-1">
@@ -574,7 +574,7 @@
                 </div>
 
                 <!-- Standard Package (Popular) -->
-                <div class="bg-white rounded-2xl p-8 shadow-xl reveal active border-2 border-secondary relative transform md:-translate-y-4 flex flex-col">
+                <div class="bg-white rounded-2xl p-8 shadow-xl reveal border-2 border-secondary relative transform md:-translate-y-4 flex flex-col">
                     <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-secondary text-white px-4 py-1 rounded-full text-sm font-bold">
                         MOST POPULAR
                     </div>
@@ -618,7 +618,7 @@
                 </div>
 
                 <!-- Premium Package -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg reveal active border border-gray-100 flex flex-col">
+                <div class="bg-white rounded-2xl p-8 shadow-lg reveal border border-gray-100 flex flex-col">
                     <div class="mb-6">
                         <h3 class="font-heading text-xl font-bold text-dark mb-2">Business</h3>
                         <div class="flex items-baseline gap-1">
@@ -659,7 +659,7 @@
                 </div>
             </div>
             
-            <div class="text-center mt-8 text-gray-500 text-sm reveal active">
+            <div class="text-center mt-8 text-gray-500 text-sm reveal">
                 * Custom quotes available based on project complexity and specific requirements
             </div>
         </div>
@@ -669,7 +669,7 @@
     <section id="contact" class="py-20 lg:py-32 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="reveal active">
+                <div class="reveal">
                     <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4">Let's Build Something <span class="text-secondary">Amazing</span> Together</h2>
                     <p class="text-gray-600 text-lg mb-8">Ready to transform your blog? Fill out the form and I'll get back to you within 24 hours.</p>
                     
@@ -680,7 +680,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Email me directly</p>
-                                <a href="/cdn-cgi/l/email-protection#94f0f5fafde7fce3f5e5f5e7adadadd4f3f9f5fdf8baf7fbf9" class="text-dark font-semibold hover:text-primary transition-colors"><span class="__cf_email__" data-cfemail="98fcf9f6f1ebf0eff9e9f9eba1a1a1d8fff5f9f1f4b6fbf7f5">[email&#160;protected]</span></a>
+                                <a href="/cdn-cgi/l/email-protection#0c686d62657f647b6d7d6d7f3535354c6b616d6560226f6361" class="text-dark font-semibold hover:text-primary transition-colors"><span class="__cf_email__" data-cfemail="7115101f180219061000100248484831161c10181d5f121e1c">[email&#160;protected]</span></a>
                             </div>
                         </div>
                         
@@ -715,7 +715,7 @@
                 </div>
 
                 <!-- UPDATED CONTACT FORM WITH FORMSPREE -->
-                <div class="bg-gray-50 rounded-2xl p-8 reveal active border border-gray-100">
+                <div class="bg-gray-50 rounded-2xl p-8 reveal border border-gray-100">
                     <form action="https://formspree.io/f/mbdzeyaa" method="POST" id="contactForm" class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
@@ -764,7 +764,7 @@
                     
                     <!-- Error Message -->
                     <div id="formError" class="hidden mt-4 p-4 bg-red-100 text-red-700 rounded-lg text-center">
-                        ❌ Something went wrong. Please email me directly at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="583c3936312b302f3929392b616161183f35393134763b3735">[email&#160;protected]</a>
+                        ❌ Something went wrong. Please email me directly at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4a2e2b242339223d2b3b2b397373730a2d272b232664292527">[email&#160;protected]</a>
                     </div>
                 </div>
             </div>
@@ -782,7 +782,7 @@
                         <a href="https://financialfreedomtips24.blogspot.com/" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                         </a>
-                        <a href="/cdn-cgi/l/email-protection#680c0906011b001f0919091b515151280f05090104460b0705" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
+                        <a href="/cdn-cgi/l/email-protection#3d595c53544e554a5c4c5c4e0404047d5a505c5451135e5250" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                         </a>
                     </div>
