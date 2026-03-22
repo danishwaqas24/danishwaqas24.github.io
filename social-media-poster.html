@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PosterPro - Social Media Poster Generator</title>
+    <meta name="description" content="Create stunning social media posters in seconds. Professional designs for Instagram, Pinterest, YouTube, and more.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Bebas+Neue&family=Playfair+Display:wght@700&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .gradient-6 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+        .gradient-7 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .gradient-8 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
+        .gradient-9 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        .gradient-10 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        
+        .poster-container {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .pattern-dots {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.2) 1.5px, transparent 1.5px);
+            background-size: 16px 16px;
+        }
+        
+        .pattern-grid {
+            background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-pulse { animation: pulse-slow 4s ease-in-out infinite; }
+        
+        .size-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .gradient-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .gradient-btn:hover { transform: scale(1.1); }
+        .gradient-btn.active { border-color: #1f2937; box-shadow: 0 0 0 2px white, 0 0 0 4px #1f2937; }
+        
+        .font-btn.active {
+            background: #1f2937;
+            color: white;
+        }
+        
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+        
+        .range-slider {
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+        }
+        
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(102, 126, 234, 0.4);
+        }
+        
+        .font-bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.02em; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        
+        .pricing-card {
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+        }
+        
+        .pricing-popular {
+            border: 2px solid #667eea;
+            position: relative;
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .hidden-section { display: none; }
+        
+        .watermark {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-xl">P</div>
+                <span class="text-2xl font-black text-gray-900 tracking-tight">PosterPro</span>
+            </div>
+            <nav class="hidden md:flex gap-8">
+                <a href="#generator" class="text-gray-600 hover:text-gray-900 font-medium">Generator</a>
+                <a href="#pricing" class="text-gray-600 hover:text-gray-900 font-medium">Pricing</a>
+                <a href="#features" class="text-gray-600 hover:text-gray-900 font-medium">Features</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <button onclick="showLogin()" class="text-gray-600 hover:text-gray-900 font-medium">Log In</button>
+                <button onclick="showSignup()" class="btn-primary px-6 py-2 rounded-full text-white font-semibold">Get Started</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="py-20 text-center">
+    <div class="max-w-4xl mx-auto px-4">
+        <h1 class="text-5xl md:text-7xl font-black text-gray-900 mb-6 leading-tight">
+            Create Stunning<br>
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">Social Media Posters</span><br>
+            in 60 Seconds
+        </h1>
+        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            No design skills needed. Professional-grade posters for Instagram, Pinterest, YouTube, and more. 
+            Start your free trial today.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button onclick="scrollToGenerator()" class="btn-primary px-8 py-4 rounded-full text-white font-bold text-lg">
+                Create Free Poster →
+            </button>
+            <button onclick="showVideo()" class="px-8 py-4 rounded-full border-2 border-gray-300 text-gray-700 font-bold text-lg hover:bg-gray-50">
+                Watch Demo
+            </button>
+        </div>
+        <div class="mt-8 flex items-center justify-center gap-6 text-sm text-gray-500">
+            <span class="flex items-center gap-1">✓ No credit card required</span>
+            <span class="flex items-center gap-1">✓ 5 free posters</span>
+            <span class="flex items-center gap-1">✓ Cancel anytime</span>
+        </div>
+    </div>
+</section>
+
+<!-- Generator Section -->
+<section id="generator" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900">Design Your Poster</h2>
+            <p class="text-gray-600 mt-2">Choose your platform, customize, and download in HD</p>
+        </div>
+        
+        <div class="grid lg:grid-cols-12 gap-8">
+            <!-- Controls -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <!-- Platform -->
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="font-bold text-gray-800 mb-4 uppercase text-sm tracking-wide">Select Platform</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="setSize('instagram')" class="size-btn active px-4 py-3 rounded-xl border-2 border-gray-200 font-semibold text-sm transition-all" data-size="instagram">
+                            Instagram
+                        </button>
+                        <button onclick="setSize('pinterest')" class="size-btn px-4 py-3 rounded-xl border-2 border-gray-200 font-semibold text-sm transition-all" data-size="pinterest">
+                            Pinterest
+                        </button>
+                        <button onclick="setSize('youtube')" class="size-btn px-4 py-3 rounded-xl border-2 border-gray-200 font-semibold text-sm transition-all" data-size="youtube">
+                            YouTube
+                        </button>
+                        <button onclick="setSize('facebook')" class="size-btn px-4 py-3 rounded-xl border-2 border-gray-200 font-semibold text-sm transition-all" data-size="facebook">
+                            Facebook
+                        </button>
+                        <button onclick="setSize('twitter')" class="size-btn px-4 py-3 rounded-xl border-2 border-gray-200 font-semibold text-sm transition-all" data-size="twitter">
+                            Twitter/X
+                        </button>
+                        <button onclick="setSize('linkedin')" class="size-btn px-4 py-3 rounded-xl border-2 border-gray-200 font-semibold text-sm transition-all" data-size="linkedin">
+                            LinkedIn
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Background -->
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="font-bold text-gray-800 mb-4 uppercase text-sm tracking-wide">Background Style</h3>
+                    <div class="grid grid-cols-5 gap-2 mb-4">
+                        <button onclick="setGradient('gradient-1')" class="gradient-btn gradient-1 active" data-gradient="gradient-1"></button>
+                        <button onclick="setGradient('gradient-2')" class="gradient-btn gradient-2" data-gradient="gradient-2"></button>
+                        <button onclick="setGradient('gradient-3')" class="gradient-btn gradient-3" data-gradient="gradient-3"></button>
+                        <button onclick="setGradient('gradient-4')" class="gradient-btn gradient-4" data-gradient="gradient-4"></button>
+                        <button onclick="setGradient('gradient-5')" class="gradient-btn gradient-5" data-gradient="gradient-5"></button>
+                        <button onclick="setGradient('gradient-6')" class="gradient-btn gradient-6" data-gradient="gradient-6"></button>
+                        <button onclick="setGradient('gradient-7')" class="gradient-btn gradient-7" data-gradient="gradient-7"></button>
+                        <button onclick="setGradient('gradient-8')" class="gradient-btn gradient-8" data-gradient="gradient-8"></button>
+                        <button onclick="setGradient('gradient-9')" class="gradient-btn gradient-9" data-gradient="gradient-9"></button>
+                        <button onclick="setGradient('gradient-10')" class="gradient-btn gradient-10" data-gradient="gradient-10"></button>
+                    </div>
+                    <div class="flex gap-2 mb-3">
+                        <input type="color" id="solidColor" onchange="setSolidColor(this.value)" value="#667eea" title="Custom Color">
+                        <button onclick="togglePattern('dots')" class="flex-1 px-3 py-2 rounded-lg border-2 border-gray-200 text-sm font-medium hover:bg-white">Dots</button>
+                        <button onclick="togglePattern('grid')" class="flex-1 px-3 py-2 rounded-lg border-2 border-gray-200 text-sm font-medium hover:bg-white">Grid</button>
+                        <button onclick="togglePattern('none')" class="flex-1 px-3 py-2 rounded-lg border-2 border-gray-200 text-sm font-medium hover:bg-white">Clean</button>
+                    </div>
+                </div>
+
+                <!-- Typography -->
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="font-bold text-gray-800 mb-4 uppercase text-sm tracking-wide">Typography</h3>
+                    
+                    <input type="text" id="headline" placeholder="YOUR HEADLINE" oninput="updateText()" 
+                           class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 mb-3 focus:border-purple-500 focus:outline-none font-bold">
+                    
+                    <input type="text" id="subheadline" placeholder="Add your subheadline..." oninput="updateText()" 
+                           class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 mb-3 focus:border-purple-500 focus:outline-none">
+                    
+                    <input type="text" id="cta" placeholder="Call to action" oninput="updateText()" 
+                           class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 mb-4 focus:border-purple-500 focus:outline-none">
+                    
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <button onclick="setFont('bebas')" class="font-btn active px-3 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold font-bebas" data-font="bebas">BEBAS</button>
+                        <button onclick="setFont('playfair')" class="font-btn px-3 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold font-playfair" data-font="playfair">Playfair</button>
+                        <button onclick="setFont('montserrat')" class="font-btn px-3 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold font-montserrat" data-font="montserrat">Montserrat</button>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <input type="color" id="textColor" onchange="updateTextColor(this.value)" value="#ffffff" class="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-200">
+                            <span class="text-sm font-medium text-gray-600">Text Color</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-500 w-12">Size</span>
+                            <input type="range" id="textSize" min="24" max="120" value="64" oninput="updateTextSize(this.value)" class="range-slider flex-1">
+                            <span id="sizeDisplay" class="text-sm font-semibold w-8">64</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="font-bold text-gray-800 mb-4 uppercase text-sm tracking-wide">Background Image (Optional)</h3>
+                    <input type="file" id="imageUpload" accept="image/*" onchange="handleImage(this)" 
+                           class="w-full text-sm file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer border-2 border-dashed border-gray-300 rounded-xl">
+                    <button onclick="removeImage()" class="mt-2 text-sm text-red-500 hover:text-red-700 font-medium">Remove Image</button>
+                </div>
+
+                <!-- Actions -->
+                <div class="space-y-3">
+                    <button onclick="downloadPoster()" class="btn-primary w-full py-4 rounded-xl text-white font-bold text-lg flex items-center justify-center gap-2">
+                        <span>⬇️</span> Download HD Poster
+                    </button>
+                    <div class="text-center text-sm text-gray-500">
+                        <span id="downloadCount">5</span> free downloads remaining
+                    </div>
+                    <button onclick="randomize()" class="w-full py-3 bg-gray-200 hover:bg-gray-300 rounded-xl font-semibold text-gray-700 transition-all">
+                        🎲 Randomize Design
+                    </button>
+                    <button onclick="resetAll()" class="w-full py-3 border-2 border-gray-300 hover:bg-gray-50 rounded-xl font-semibold text-gray-600 transition-all">
+                        ↺ Reset All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Preview -->
+            <div class="lg:col-span-8">
+                <div class="bg-gray-100 rounded-2xl p-8 flex flex-col items-center">
+                    <div class="flex justify-between items-center w-full mb-4 max-w-2xl">
+                        <h3 class="font-bold text-gray-800">Live Preview</h3>
+                        <span id="dimensions" class="text-sm text-gray-500 font-mono bg-white px-3 py-1 rounded-full">1080 × 1080 px</span>
+                    </div>
+                    
+                    <div class="overflow-auto p-4 bg-white rounded-xl shadow-inner">
+                        <div id="poster" class="poster-container gradient-1 relative overflow-hidden flex flex-col items-center justify-center text-center p-8 transition-all duration-500" 
+                             style="width: 400px; height: 400px;">
+                            
+                            <div id="pattern" class="absolute inset-0 pattern-dots opacity-30 pointer-events-none"></div>
+                            
+                            <div id="imageLayer" class="absolute inset-0 hidden">
+                                <img id="bgImage" class="w-full h-full object-cover" src="" alt="">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                            </div>
+                            
+                            <div class="absolute top-6 right-6 w-20 h-20 border-4 border-white/20 rounded-full animate-float"></div>
+                            <div class="absolute bottom-6 left-6 w-16 h-16 bg-white/10 rounded-2xl rotate-12 animate-float" style="animation-delay: 1s;"></div>
+                            <div class="absolute top-1/4 left-8 w-3 h-3 bg-white/60 rounded-full animate-pulse"></div>
+                            <div class="absolute top-1/3 right-12 w-2 h-2 bg-white/80 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+                            
+                            <div class="relative z-10 max-w-full px-4">
+                                <h1 id="posterHeadline" class="text-6xl font-black text-white mb-4 drop-shadow-2xl font-bebas leading-none tracking-wide">
+                                    YOUR<br>HEADLINE
+                                </h1>
+                                <p id="posterSub" class="text-xl text-white/90 mb-8 drop-shadow-lg font-montserrat font-medium max-w-sm">
+                                    Create stunning social media content that converts
+                                </p>
+                                <div id="posterCta" class="inline-block px-8 py-4 glass rounded-full text-white font-bold text-lg font-montserrat tracking-wide">
+                                    LEARN MORE →
+                                </div>
+                            </div>
+                            
+                            <div class="watermark" id="watermark">Made with PosterPro</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 grid grid-cols-3 gap-4 w-full max-w-2xl text-sm">
+                        <div class="bg-blue-50 p-4 rounded-xl border-l-4 border-blue-500">
+                            <strong class="text-blue-900 block mb-1">💡 Pro Tip</strong>
+                            <span class="text-blue-700">Keep headline under 8 words</span>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-xl border-l-4 border-purple-500">
+                            <strong class="text-purple-900 block mb-1">🎨 Best Practice</strong>
+                            <span class="text-purple-700">High contrast = 40% more engagement</span>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-xl border-l-4 border-green-500">
+                            <strong class="text-green-900 block mb-1">📊 Data</strong>
+                            <span class="text-green-700">CTAs get 285% more clicks</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-black text-gray-900 mb-4">Simple Pricing</h2>
+            <p class="text-xl text-gray-600">Start free, upgrade when you're ready</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Free -->
+            <div class="pricing-card bg-white rounded-2xl p-8 shadow-lg">
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
+                <div class="text-4xl font-black text-gray-900 mb-6">$0<span class="text-lg font-normal text-gray-500">/month</span></div>
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 5 posters/month</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Basic templates</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Watermark on exports</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 1080p exports</li>
+                    <li class="flex items-center gap-2 text-gray-400"><span>✗</span> No commercial use</li>
+                </ul>
+                <button onclick="showSignup()" class="w-full py-3 border-2 border-gray-300 rounded-xl font-bold text-gray-700 hover:bg-gray-50">Get Started</button>
+            </div>
+            
+            <!-- Pro -->
+            <div class="pricing-card pricing-popular bg-white rounded-2xl p-8 shadow-xl">
+                <div class="popular-badge">MOST POPULAR</div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Pro</h3>
+                <div class="text-4xl font-black text-gray-900 mb-6">$9<span class="text-lg font-normal text-gray-500">/month</span></div>
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Unlimited posters</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> All templates</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> No watermark</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 4K exports</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Commercial license</li>
+                </ul>
+                <button onclick="showSignup()" class="btn-primary w-full py-3 rounded-xl font-bold text-white">Upgrade to Pro</button>
+            </div>
+            
+            <!-- Agency -->
+            <div class="pricing-card bg-white rounded-2xl p-8 shadow-lg">
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Agency</h3>
+                <div class="text-4xl font-black text-gray-900 mb-6">$29<span class="text-lg font-normal text-gray-500">/month</span></div>
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Everything in Pro</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 5 team members</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> White label exports</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Priority support</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> API access</li>
+                </ul>
+                <button onclick="showSignup()" class="w-full py-3 border-2 border-gray-300 rounded-xl font-bold text-gray-700 hover:bg-gray-50">Contact Sales</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Why Choose PosterPro?</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center p-6">
+                <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">⚡</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Lightning Fast</h3>
+                <p class="text-gray-600">Create professional posters in 60 seconds. No learning curve, no design skills needed.</p>
+            </div>
+            <div class="text-center p-6">
+                <div class="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🎨</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Premium Designs</h3>
+                <p class="text-gray-600">10+ gradient styles, professional fonts, and patterns that make your brand stand out.</p>
+            </div>
+            <div class="text-center p-6">
+                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">📱</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">All Platforms</h3>
+                <p class="text-gray-600">Perfect sizes for Instagram, Pinterest, YouTube, Facebook, Twitter, and LinkedIn.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">P</div>
+                    <span class="text-xl font-bold">PosterPro</span>
+                </div>
+                <p class="text-gray-400 text-sm">Create stunning social media posters in seconds. Professional design made simple.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Product</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white">Features</a></li>
+                    <li><a href="#" class="hover:text-white">Pricing</a></li>
+                    <li><a href="#" class="hover:text-white">Templates</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Company</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white">About</a></li>
+                    <li><a href="#" class="hover:text-white">Blog</a></li>
+                    <li><a href="#" class="hover:text-white">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Legal</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white">Privacy</a></li>
+                    <li><a href="#" class="hover:text-white">Terms</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
+            © 2026 PosterPro. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<script>
+// Configuration
+const sizes = {
+    instagram: { w: 400, h: 400, label: "1080 × 1080 px" },
+    pinterest: { w: 400, h: 600, label: "1000 × 1500 px" },
+    youtube: { w: 640, h: 360, label: "1280 × 720 px" },
+    facebook: { w: 480, h: 250, label: "1200 × 628 px" },
+    twitter: { w: 480, h: 240, label: "1200 × 675 px" },
+    linkedin: { w: 480, h: 240, label: "1200 × 627 px" }
+};
+
+let downloadCount = 5;
+let isPro = false;
+
+// Functions
+function setSize(platform) {
+    const s = sizes[platform];
+    const p = document.getElementById("poster");
+    p.style.width = s.w + "px";
+    p.style.height = s.h + "px";
+    document.getElementById("dimensions").textContent = s.label;
+    
+    document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
+    document.querySelector(`[data-size="${platform}"]`).classList.add("active");
+}
+
+function setGradient(cls) {
+    const p = document.getElementById("poster");
+    p.className = p.className.replace(/gradient-\d+/, cls);
+    
+    document.querySelectorAll(".gradient-btn").forEach(b => b.classList.remove("active"));
+    document.querySelector(`[data-gradient="${cls}"]`).classList.add("active");
+}
+
+function setSolidColor(color) {
+    document.getElementById("poster").style.background = color;
+}
+
+function togglePattern(type) {
+    const el = document.getElementById("pattern");
+    el.className = "absolute inset-0 pointer-events-none opacity-30";
+    if (type === "dots") el.classList.add("pattern-dots");
+    else if (type === "grid") el.classList.add("pattern-grid");
+}
+
+function updateText() {
+    const h = document.getElementById("headline").value || "YOUR<br>HEADLINE";
+    const s = document.getElementById("subheadline").value || "Create stunning social media content that converts";
+    const c = document.getElementById("cta").value || "LEARN MORE →";
+    
+    document.getElementById("posterHeadline").innerHTML = h.replace(/\n/g, "<br>");
+    document.getElementById("posterSub").textContent = s;
+    document.getElementById("posterCta").textContent = c;
+}
+
+function setFont(font) {
+    const fonts = { bebas: "font-bebas", playfair: "font-playfair", montserrat: "font-montserrat" };
+    const h = document.getElementById("posterHeadline");
+    const s = document.getElementById("posterSub");
+    const c = document.getElementById("posterCta");
+    
+    [h, s, c].forEach(el => {
+        el.classList.remove("font-bebas", "font-playfair", "font-montserrat");
+        el.classList.add(fonts[font]);
+    });
+    
+    document.querySelectorAll(".font-btn").forEach(b => b.classList.remove("active"));
+    document.querySelector(`[data-font="${font}"]`).classList.add("active");
+}
+
+function updateTextColor(color) {
+    document.getElementById("posterHeadline").style.color = color;
+    document.getElementById("posterSub").style.color = color + "CC";
+    document.getElementById("posterCta").style.color = color;
+}
+
+function updateTextSize(size) {
+    document.getElementById("posterHeadline").style.fontSize = size + "px";
+    document.getElementById("sizeDisplay").textContent = size;
+}
+
+function handleImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("bgImage").src = e.target.result;
+            document.getElementById("imageLayer").classList.remove("hidden");
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function removeImage() {
+    document.getElementById("imageLayer").classList.add("hidden");
+    document.getElementById("imageUpload").value = "";
+}
+
+function downloadPoster() {
+    if (downloadCount <= 0 && !isPro) {
+        alert("You've used all free downloads! Upgrade to Pro for unlimited posters.");
+        document.getElementById("pricing").scrollIntoView({ behavior: "smooth" });
+        return;
+    }
+    
+    const poster = document.getElementById("poster");
+    const watermark = document.getElementById("watermark");
+    
+    // Show watermark for free users
+    if (!isPro) {
+        watermark.style.display = "block";
+        downloadCount--;
+        document.getElementById("downloadCount").textContent = downloadCount;
+    } else {
+        watermark.style.display = "none";
+    }
+    
+    html2canvas(poster, { scale: 3, useCORS: true, backgroundColor: null }).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "poster-" + Date.now() + ".png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    });
+}
+
+function randomize() {
+    const gradients = ["gradient-1", "gradient-2", "gradient-3", "gradient-4", "gradient-5", "gradient-6", "gradient-7", "gradient-8", "gradient-9", "gradient-10"];
+    const fonts = ["bebas", "playfair", "montserrat"];
+    
+    setGradient(gradients[Math.floor(Math.random() * gradients.length)]);
+    setFont(fonts[Math.floor(Math.random() * fonts.length)]);
+    
+    const headlines = ["BOOST YOUR\nSALES", "NEW ARRIVAL\n2026", "LIMITED\nTIME OFFER", "JOIN THE\nMOVEMENT", "EXCLUSIVE\nDEAL"];
+    const subs = ["Discover what makes us different", "Transform your business today", "Join 10,000+ happy customers", "Don't miss out on this opportunity"];
+    const ctas = ["SHOP NOW", "GET STARTED", "LEARN MORE", "SIGN UP FREE"];
+    
+    document.getElementById("headline").value = headlines[Math.floor(Math.random() * headlines.length)];
+    document.getElementById("subheadline").value = subs[Math.floor(Math.random() * subs.length)];
+    document.getElementById("cta").value = ctas[Math.floor(Math.random() * ctas.length)];
+    updateText();
+}
+
+function resetAll() {
+    document.getElementById("headline").value = "";
+    document.getElementById("subheadline").value = "";
+    document.getElementById("cta").value = "";
+    updateText();
+    setGradient("gradient-1");
+    togglePattern("dots");
+    removeImage();
+    setSize("instagram");
+    setFont("bebas");
+    updateTextSize(64);
+    document.getElementById("textColor").value = "#ffffff";
+    updateTextColor("#ffffff");
+}
+
+// Navigation
+function scrollToGenerator() {
+    document.getElementById("generator").scrollIntoView({ behavior: "smooth" });
+}
+
+function showLogin() {
+    alert("Login feature coming soon! Use the generator for free now.");
+}
+
+function showSignup() {
+    alert("Sign up feature coming soon! Use the generator for free now.");
+}
+
+function showVideo() {
+    alert("Demo video coming soon!");
+}
+
+// Initialize
+updateText();
+</script>
+
+</body>
+</html>
