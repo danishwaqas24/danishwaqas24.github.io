@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danish Poster | Professional Design Studio</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --sidebar-width: 280px;
+            --header-height: 64px;
+            --primary: #7c3aed;
+            --primary-light: #a78bfa;
+            --secondary: #ec4899;
+            --bg-dark: #0f0f1a;
+            --bg-panel: #1a1a2e;
+            --bg-card: #16162a;
+            --border: #2e2e4a;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        /* Header */
+        .top-bar {
+            height: var(--header-height);
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+        }
+        
+        .file-name {
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .file-name:hover {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+        
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+        }
+        
+        .btn-icon:hover {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+        
+        .btn-export {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-export:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Main Workspace */
+        .workspace {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* Left Sidebar */
+        .sidebar-left {
+            width: var(--sidebar-width);
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+        }
+        
+        .sidebar-tab:hover {
+            color: var(--text);
+            background: var(--bg-card);
+        }
+        
+        .sidebar-tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .category-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 20px 0 12px;
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .template-card {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .template-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+        
+        .template-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .elements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .element-item {
+            aspect-ratio: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .element-item:hover {
+            background: var(--border);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .upload-box {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .upload-box:hover {
+            border-color: var(--primary);
+            background: rgba(124, 58, 237, 0.05);
+        }
+        
+        /* Center Canvas */
+        .canvas-area {
+            flex: 1;
+            background: #0a0a14;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .canvas-toolbar {
+            height: 48px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 0 20px;
+        }
+        
+        .toolbar-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .toolbar-btn:hover {
+            color: var(--text);
+            background: var(--bg-card);
+        }
+        
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+        
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            overflow: auto;
+            position: relative;
+        }
+        
+        #main-canvas {
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        /* Right Sidebar */
+        .sidebar-right {
+            width: var(--sidebar-width);
+            background: var(--bg-panel);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        
+        .property-group {
+            margin-bottom: 20px;
+        }
+        
+        .property-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .font-select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+        }
+        
+        .color-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .color-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-btn.active {
+            border-color: white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        
+        .slider-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .slider {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--border);
+            border-radius: 2px;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .effect-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .effect-btn {
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .effect-btn:hover, .effect-btn.active {
+            border-color: var(--primary);
+            background: rgba(124, 58, 237, 0.1);
+        }
+        
+        .layer-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            margin-bottom: 8px;
+        }
+        
+        .layer-item:hover {
+            border-color: var(--border);
+        }
+        
+        .layer-item.active {
+            border-color: var(--primary);
+            background: rgba(124, 58, 237, 0.1);
+        }
+        
+        .layer-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-panel);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .layer-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .layer-name {
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .layer-type {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--bg-panel);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        
+        .modal-close:hover {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .export-option {
+            width: 100%;
+            padding: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .export-option:hover {
+            border-color: var(--primary);
+            background: rgba(124, 58, 237, 0.1);
+        }
+        
+        .export-option .info h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .export-option .info p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .export-option i {
+            font-size: 24px;
+            color: var(--text-muted);
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-panel);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 2000;
+            border: 1px solid var(--border);
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Pro Badge */
+        .pro-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar-left, .sidebar-right {
+                position: fixed;
+                z-index: 50;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar-right {
+                right: 0;
+                left: auto;
+                transform: translateX(100%);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <div class="logo-section">
+            <div class="logo">D</div>
+            <div>
+                <div class="font-semibold">Danish Poster</div>
+                <div class="file-name" onclick="renameFile()">
+                    <i class="fas fa-pen text-xs mr-1"></i>
+                    <span id="file-name-text">Untitled Design</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="top-actions">
+            <button class="btn-icon" title="Undo" onclick="undo()">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button class="btn-icon" title="Redo" onclick="redo()">
+                <i class="fas fa-redo"></i>
+            </button>
+            <div style="width: 1px; height: 24px; background: var(--border);"></div>
+            
+            <!-- Free Counter -->
+            <div class="px-3 py-1 rounded-full bg-white/5 text-sm">
+                <span class="text-gray-400">Free:</span>
+                <span id="free-counter" class="font-bold text-green-400 ml-1">7</span>
+            </div>
+            
+            <!-- EXPORT BUTTON - YEH KAM KAREGA -->
+            <button class="btn-export" id="export-btn" onclick="exportImage()">
+                <i class="fas fa-download"></i>
+                <span>Download</span>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Main Workspace -->
+    <div class="workspace">
+        <!-- Left Sidebar -->
+        <aside class="sidebar-left" id="sidebar-left">
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" onclick="switchTab('templates', this)">Templates</button>
+                <button class="sidebar-tab" onclick="switchTab('elements', this)">Elements</button>
+                <button class="sidebar-tab" onclick="switchTab('uploads', this)">Uploads</button>
+            </div>
+            
+            <!-- Templates Tab -->
+            <div class="sidebar-content" id="tab-templates">
+                <input type="text" class="search-box" placeholder="Search templates...">
+                
+                <div class="category-title">Instagram Posts</div>
+                <div class="template-grid">
+                    <div class="template-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="applyTemplate('gradient')">
+                        <div class="template-label">Purple Gradient</div>
+                    </div>
+                    <div class="template-card" style="background: linear-gradient(135deg, #1a1a2e 0%, #0f0f23 100%);" onclick="applyTemplate('dark')">
+                        <div class="template-label">Dark Mode</div>
+                    </div>
+                    <div class="template-card" style="background: linear-gradient(135deg, #2d1b69 0%, #0f0f23 100%); border: 1px solid #7c3aed;" onclick="applyTemplate('neon')">
+                        <div class="template-label">Neon Glow</div>
+                    </div>
+                    <div class="template-card" style="background: #ffffff;" onclick="applyTemplate('minimal')">
+                        <div class="template-label" style="color: #000;">Clean White</div>
+                    </div>
+                    <div class="template-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="applyTemplate('pink')">
+                        <div class="template-label">Pink Sunset</div>
+                    </div>
+                    <div class="template-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="applyTemplate('ocean')">
+                        <div class="template-label">Ocean Blue</div>
+                    </div>
+                </div>
+                
+                <div class="category-title">Stories</div>
+                <div class="template-grid">
+                    <div class="template-card" style="background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);" onclick="applyTemplate('story-gradient')">
+                        <div class="template-label">Story 1</div>
+                    </div>
+                    <div class="template-card" style="background: linear-gradient(180deg, #f093fb 0%, #f5576c 100%);" onclick="applyTemplate('story-pink')">
+                        <div class="template-label">Story 2</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Elements Tab -->
+            <div class="sidebar-content hidden" id="tab-elements">
+                <div class="category-title">Add Text</div>
+                <button class="w-full py-3 mb-4 bg-white text-black rounded-lg font-semibold hover:bg-gray-200 transition-all" onclick="addText()">
+                    <i class="fas fa-plus mr-2"></i> Add Heading
+                </button>
+                
+                <div class="category-title">Shapes</div>
+                <div class="elements-grid">
+                    <div class="element-item" onclick="addShape('square')">⬜</div>
+                    <div class="element-item" onclick="addShape('circle')">⭕</div>
+                    <div class="element-item" onclick="addShape('triangle')">🔺</div>
+                    <div class="element-item" onclick="addShape('star')">⭐</div>
+                    <div class="element-item" onclick="addShape('heart')">❤️</div>
+                    <div class="element-item" onclick="addShape('arrow')">➡️</div>
+                </div>
+                
+                <div class="category-title">3D Elements <span class="pro-badge">PRO</span></div>
+                <div class="elements-grid">
+                    <div class="element-item" onclick="add3D('fire')">🔥</div>
+                    <div class="element-item" onclick="add3D('lightning')">⚡</div>
+                    <div class="element-item" onclick="add3D('crown')">👑</div>
+                    <div class="element-item" onclick="add3D('diamond')">💎</div>
+                    <div class="element-item" onclick="add3D('rocket')">🚀</div>
+                    <div class="element-item" onclick="add3D('trophy')">🏆</div>
+                </div>
+            </div>
+            
+            <!-- Uploads Tab -->
+            <div class="sidebar-content hidden" id="tab-uploads">
+                <div class="upload-box" onclick="document.getElementById('file-upload').click()">
+                    <i class="fas fa-cloud-upload-alt text-3xl mb-2 text-gray-400"></i>
+                    <div class="font-medium">Click to upload image</div>
+                    <div class="text-sm text-gray-500 mt-1">JPG, PNG up to 5MB</div>
+                </div>
+                <input type="file" id="file-upload" accept="image/*" class="hidden" onchange="handleUpload(this)">
+            </div>
+        </aside>
+        
+        <!-- Center Canvas -->
+        <main class="canvas-area">
+            <div class="canvas-toolbar">
+                <button class="toolbar-btn" onclick="resizeCanvas('instagram')">
+                    <i class="fas fa-square"></i> Instagram
+                </button>
+                <button class="toolbar-btn" onclick="resizeCanvas('story')">
+                    <i class="fas fa-mobile-alt"></i> Story
+                </button>
+                <button class="toolbar-btn" onclick="resizeCanvas('youtube')">
+                    <i class="fas fa-video"></i> YouTube
+                </button>
+                
+                <div class="zoom-control">
+                    <button class="btn-icon" onclick="adjustZoom(-10)"><i class="fas fa-minus"></i></button>
+                    <input type="range" class="slider" style="width: 80px;" min="50" max="150" value="100" oninput="setZoom(this.value)">
+                    <button class="btn-icon" onclick="adjustZoom(10)"><i class="fas fa-plus"></i></button>
+                    <span id="zoom-text" class="text-sm text-gray-400 w-12">100%</span>
+                </div>
+            </div>
+            
+            <div class="canvas-container" id="canvas-container">
+                <canvas id="main-canvas" width="600" height="600"></canvas>
+            </div>
+        </main>
+        
+        <!-- Right Sidebar -->
+        <aside class="sidebar-right" id="sidebar-right">
+            <div class="panel-header">Properties</div>
+            <div class="panel-content" id="properties-panel">
+                <div class="empty-state">
+                    <i class="fas fa-mouse-pointer text-4xl mb-4 opacity-50"></i>
+                    <div>Select an element to edit</div>
+                </div>
+            </div>
+            
+            <div class="panel-header" style="border-top: 1px solid var(--border);">Layers</div>
+            <div class="panel-content">
+                <div id="layers-list">
+                    <div class="empty-state" style="padding: 20px;">
+                        <div class="text-sm">No layers yet</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- Export Modal -->
+<div class="modal-overlay" id="export-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">Download Design</div>
+            <div class="modal-close" onclick="closeModal('export-modal')">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="export-option" onclick="downloadImage('hd')">
+                <div class="info">
+                    <h4>HD Quality</h4>
+                    <p>1080x1080 • Best for social media</p>
+                </div>
+                <i class="fas fa-image text-green-400"></i>
+            </div>
+            
+            <div class="export-option" onclick="checkProDownload('4k')">
+                <div class="info">
+                    <h4>4K Ultra HD</h4>
+                    <p>3840x3840 • Crystal clear quality</p>
+                </div>
+                <i class="fas fa-star text-yellow-400"></i>
+                <span class="pro-badge ml-2">PRO</span>
+            </div>
+            
+            <div class="export-option" onclick="checkProDownload('transparent')">
+                <div class="info">
+                    <h4>Transparent PNG</h4>
+                    <p>No background • For logos</p>
+                </div>
+                <i class="fas fa-magic text-purple-400"></i>
+                <span class="pro-badge ml-2">PRO</span>
+            </div>
+            
+            <div class="mt-4 p-4 bg-white/5 rounded-lg text-center">
+                <span class="text-gray-400">Free downloads remaining: </span>
+                <span id="modal-free-count" class="font-bold text-green-400">7</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pro Modal -->
+<div class="modal-overlay" id="pro-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">Upgrade to Pro</div>
+            <div class="modal-close" onclick="closeModal('pro-modal')">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="modal-body text-center">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center mx-auto mb-4 text-3xl">
+                👑
+            </div>
+            <h3 class="text-xl font-bold mb-2">Unlock Pro Features</h3>
+            <p class="text-gray-400 mb-6">Get unlimited downloads and premium features</p>
+            
+            <div class="space-y-2 mb-6 text-left text-sm">
+                <div class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> Unlimited downloads</div>
+                <div class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> 4K Ultra HD exports</div>
+                <div class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> Transparent PNG</div>
+                <div class="flex items-center gap-3"><i class="fas fa-check text-green-400"></i> All 3D elements</div>
+            </div>
+            
+            <button class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold mb-3" onclick="upgradeToPro()">
+                Upgrade $9/month
+            </button>
+            <button class="text-gray-400 text-sm hover:text-white" onclick="closeModal('pro-modal')">
+                Continue with free
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Message</div>
+
+<script>
+// ==================== STATE ====================
+let canvas, ctx;
+let elements = [];
+let selectedElement = null;
+let isDragging = false;
+let dragOffset = { x: 0, y: 0 };
+let zoom = 100;
+let freeUses = 7;
+let isPro = false;
+let currentTemplate = 'gradient';
+
+// ==================== INIT ====================
+window.onload = function() {
+    canvas = document.getElementById('main-canvas');
+    ctx = canvas.getContext('2d');
+    
+    // Load saved uses
+    const saved = localStorage.getItem('danishPosterUses');
+    if (saved) {
+        freeUses = parseInt(saved);
+        updateFreeCounter();
+    }
+    
+    // Setup events
+    setupCanvasEvents();
+    
+    // Initial draw
+    draw();
+    
+    console.log('Danish Poster loaded! Free uses:', freeUses);
+};
+
+// ==================== CANVAS EVENTS ====================
+function setupCanvasEvents() {
+    // Mouse
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('dblclick', handleDoubleClick);
+    
+    // Touch
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    canvas.addEventListener('touchend', handleMouseUp);
+}
+
+// ==================== DRAWING ====================
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Background
+    drawBackground();
+    
+    // Elements
+    elements.forEach(el => {
+        ctx.save();
+        if (el.type === 'text') drawText(el);
+        else if (el.type === 'shape') drawShape(el);
+        else if (el.type === 'image' && el.img) {
+            ctx.drawImage(el.img, el.x, el.y, el.width, el.height);
+        }
+        ctx.restore();
+    });
+    
+    // Selection indicator
+    if (selectedElement) {
+        drawSelectionBox();
+    }
+}
+
+function drawBackground() {
+    const w = canvas.width;
+    const h = canvas.height;
+    
+    switch(currentTemplate) {
+        case 'gradient':
+            const g1 = ctx.createLinearGradient(0, 0, w, h);
+            g1.addColorStop(0, '#667eea');
+            g1.addColorStop(0.5, '#764ba2');
+            g1.addColorStop(1, '#f093fb');
+            ctx.fillStyle = g1;
+            break;
+        case 'dark':
+            const g2 = ctx.createLinearGradient(0, 0, 0, h);
+            g2.addColorStop(0, '#1a1a2e');
+            g2.addColorStop(1, '#0f0f23');
+            ctx.fillStyle = g2;
+            break;
+        case 'neon':
+            const g3 = ctx.createLinearGradient(0, 0, w, h);
+            g3.addColorStop(0, '#2d1b69');
+            g3.addColorStop(1, '#0f0f23');
+            ctx.fillStyle = g3;
+            break;
+        case 'minimal':
+            ctx.fillStyle = '#ffffff';
+            break;
+        case 'pink':
+            const g4 = ctx.createLinearGradient(0, 0, w, h);
+            g4.addColorStop(0, '#f093fb');
+            g4.addColorStop(1, '#f5576c');
+            ctx.fillStyle = g4;
+            break;
+        case 'ocean':
+            const g5 = ctx.createLinearGradient(0, 0, w, h);
+            g5.addColorStop(0, '#4facfe');
+            g5.addColorStop(1, '#00f2fe');
+            ctx.fillStyle = g5;
+            break;
+        default:
+            ctx.fillStyle = '#667eea';
+    }
+    
+    ctx.fillRect(0, 0, w, h);
+    
+    // Decorative circles
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    ctx.beginPath();
+    ctx.arc(w * 0.8, h * 0.2, w * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function drawText(el) {
+    ctx.font = `${el.bold ? 'bold' : ''} ${el.size}px "${el.font}", sans-serif`;
+    ctx.fillStyle = el.color;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    
+    // Effects
+    if (el.effect === 'shadow') {
+        ctx.shadowColor = 'rgba(0,0,0,0.4)';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 4;
+        ctx.shadowOffsetY = 4;
+    } else if (el.effect === 'neon') {
+        ctx.shadowColor = el.color;
+        ctx.shadowBlur = 20;
+    }
+    
+    const lines = el.text.split('\n');
+    lines.forEach((line, i) => {
+        ctx.fillText(line, el.x, el.y + (i * el.size * 1.2));
+    });
+    
+    // Measure
+    let maxWidth = 0;
+    lines.forEach(line => {
+        const w = ctx.measureText(line).width;
+        if (w > maxWidth) maxWidth = w;
+    });
+    el.width = maxWidth;
+    el.height = lines.length * el.size * 1.2;
+}
+
+function drawShape(el) {
+    ctx.fillStyle = el.color;
+    
+    switch(el.shape) {
+        case 'square':
+            ctx.fillRect(el.x, el.y, el.width, el.height);
+            break;
+        case 'circle':
+            ctx.beginPath();
+            ctx.arc(el.x + el.width/2, el.y + el.height/2, el.width/2, 0, Math.PI * 2);
+            ctx.fill();
+            break;
+        case 'triangle':
+            ctx.beginPath();
+            ctx.moveTo(el.x + el.width/2, el.y);
+            ctx.lineTo(el.x + el.width, el.y + el.height);
+            ctx.lineTo(el.x, el.y + el.height);
+            ctx.closePath();
+            ctx.fill();
+            break;
+    }
+}
+
+function drawSelectionBox() {
+    ctx.strokeStyle = '#7c3aed';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
+    ctx.strokeRect(
+        selectedElement.x - 5,
+        selectedElement.y - 5,
+        selectedElement.width + 10,
+        selectedElement.height + 10
+    );
+    ctx.setLineDash([]);
+}
+
+// ==================== EVENT HANDLERS ====================
+function handleMouseDown(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    
+    // Find clicked element (top to bottom)
+    selectedElement = null;
+    for (let i = elements.length - 1; i >= 0; i--) {
+        const el = elements[i];
+        if (x >= el.x && x <= el.x + el.width &&
+            y >= el.y && y <= el.y + el.height) {
+            selectedElement = el;
+            isDragging = true;
+            dragOffset.x = x - el.x;
+            dragOffset.y = y - el.y;
+            
+            // Move to top
+            elements.splice(i, 1);
+            elements.push(selectedElement);
+            break;
+        }
+    }
+    
+    updateProperties();
+    updateLayers();
+    draw();
+}
+
+function handleMouseMove(e) {
+    if (!isDragging || !selectedElement) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    
+    selectedElement.x = x - dragOffset.x;
+    selectedElement.y = y - dragOffset.y;
+    
+    // Bounds
+    selectedElement.x = Math.max(0, Math.min(canvas.width - selectedElement.width, selectedElement.x));
+    selectedElement.y = Math.max(0, Math.min(canvas.height - selectedElement.height, selectedElement.y));
+    
+    draw();
+}
+
+function handleMouseUp() {
+    isDragging = false;
+}
+
+function handleDoubleClick(e) {
+    if (selectedElement && selectedElement.type === 'text') {
+        const newText = prompt('Edit text:', selectedElement.text);
+        if (newText !== null) {
+            selectedElement.text = newText;
+            draw();
+            updateProperties();
+            updateLayers();
+        }
+    }
+}
+
+function handleTouchStart(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    handleMouseDown({ clientX: touch.clientX, clientY: touch.clientY });
+}
+
+function handleTouchMove(e) {
+    e.preventDefault();
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    handleMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
+}
+
+// ==================== ADD ELEMENTS ====================
+function addText() {
+    const text = prompt('Enter your text:', 'Double click to edit');
+    if (!text) return;
+    
+    const el = {
+        id: Date.now(),
+        type: 'text',
+        text: text,
+        x: canvas.width / 2 - 100,
+        y: canvas.height / 2 - 30,
+        width: 200,
+        height: 60,
+        size: 48,
+        font: 'Montserrat',
+        color: currentTemplate === 'minimal' ? '#000000' : '#ffffff',
+        bold: true,
+        effect: 'none'
+    };
+    
+    elements.push(el);
+    selectedElement = el;
+    draw();
+    updateProperties();
+    updateLayers();
+    showToast('Text added! Drag to move');
+}
+
+function addShape(shape) {
+    const colors = ['#667eea', '#ec4899', '#10b981', '#f59e0b', '#ef4444'];
+    const el = {
+        id: Date.now(),
+        type: 'shape',
+        shape: shape,
+        x: canvas.width/2 - 50,
+        y: canvas.height/2 - 50,
+        width: 100,
+        height: 100,
+        color: colors[Math.floor(Math.random() * colors.length)]
+    };
+    
+    elements.push(el);
+    selectedElement = el;
+    draw();
+    updateProperties();
+    updateLayers();
+}
+
+function add3D(type) {
+    if (!isPro) {
+        showModal('pro-modal');
+        return;
+    }
+    
+    const emojis = { fire: '🔥', lightning: '⚡', crown: '👑', diamond: '💎', rocket: '🚀', trophy: '🏆' };
+    const el = {
+        id: Date.now(),
+        type: 'text',
+        text: emojis[type],
+        x: canvas.width/2 - 40,
+        y: canvas.height/2 - 40,
+        width: 80,
+        height: 80,
+        size: 72,
+        font: 'Segoe UI Emoji',
+        color: '#ffffff',
+        effect: 'none'
+    };
+    
+    elements.push(el);
+    selectedElement = el;
+    draw();
+    updateProperties();
+    updateLayers();
+}
+
+function handleUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const scale = Math.min(200 / img.width, 200 / img.height);
+            const el = {
+                id: Date.now(),
+                type: 'image',
+                img: img,
+                x: canvas.width/2 - (img.width * scale)/2,
+                y: canvas.height/2 - (img.height * scale)/2,
+                width: img.width * scale,
+                height: img.height * scale
+            };
+            elements.push(el);
+            selectedElement = el;
+            draw();
+            updateProperties();
+            updateLayers();
+            showToast('Image uploaded!');
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// ==================== PROPERTIES PANEL ====================
+function updateProperties() {
+    const panel = document.getElementById('properties-panel');
+    
+    if (!selectedElement) {
+        panel.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-mouse-pointer text-4xl mb-4 opacity-50"></i>
+                <div>Select an element to edit</div>
+            </div>
+        `;
+        return;
+    }
+    
+    const el = selectedElement;
+    
+    if (el.type === 'text') {
+        panel.innerHTML = `
+            <div class="property-group">
+                <label class="property-label">Text</label>
+                <textarea class="text-input" oninput="updateElementText(this.value)">${el.text}</textarea>
+            </div>
+            
+            <div class="property-group">
+                <label class="property-label">Font</label>
+                <select class="font-select" onchange="updateElementFont(this.value)">
+                    <option value="Montserrat" ${el.font === 'Montserrat' ? 'selected' : ''}>Montserrat</option>
+                    <option value="Poppins" ${el.font === 'Poppins' ? 'selected' : ''}>Poppins</option>
+                    <option value="Bebas Neue" ${el.font === 'Bebas Neue' ? 'selected' : ''}>Bebas Neue</option>
+                    <option value="Playfair Display" ${el.font === 'Playfair Display' ? 'selected' : ''}>Playfair Display</option>
+                    <option value="Oswald" ${el.font === 'Oswald' ? 'selected' : ''}>Oswald</option>
+                </select>
+            </div>
+            
+            <div class="property-group">
+                <label class="property-label">Size</label>
+                <div class="slider-control">
+                    <input type="range" class="slider" min="12" max="120" value="${el.size}" oninput="updateElementSize(this.value)">
+                    <span class="slider-value">${el.size}px</span>
+                </div>
+            </div>
+            
+            <div class="property-group">
+                <label class="property-label">Color</label>
+                <div class="color-row">
+                    ${['#ffffff', '#000000', '#667eea', '#ec4899', '#10b981', '#f59e0b'].map(c => `
+                        <div class="color-btn ${el.color === c ? 'active' : ''}" 
+                             style="background: ${c}; ${c === '#000000' ? 'border: 1px solid #333' : ''}"
+                             onclick="updateElementColor('${c}')"></div>
+                    `).join('')}
+                    <div class="color-custom">
+                        <input type="color" value="${el.color}" onchange="updateElementColor(this.value)">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="property-group">
+                <label class="property-label">Effect</label>
+                <div class="effect-grid">
+                    <div class="effect-btn ${el.effect === 'none' ? 'active' : ''}" onclick="updateElementEffect('none')">None</div>
+                    <div class="effect-btn ${el.effect === 'shadow' ? 'active' : ''}" onclick="updateElementEffect('shadow')">Shadow</div>
+                    <div class="effect-btn ${el.effect === 'neon' ? 'active' : ''}" onclick="updateElementEffect('neon')">Neon</div>
+                    <div class="effect-btn ${el.effect === 'glow' ? 'active' : ''}" onclick="updateElementEffect('glow')">Glow</div>
+                </div>
+            </div>
+            
+            <button class="w-full py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 mt-4" onclick="deleteSelected()">
+                <i class="fas fa-trash mr-2"></i> Delete
+            </button>
+        `;
+    } else if (el.type === 'shape') {
+        panel.innerHTML = `
+            <div class="property-group">
+                <label class="property-label">Color</label>
+                <div class="color-row">
+                    ${['#667eea', '#ec4899', '#10b981', '#f59e0b', '#ef4444'].map(c => `
+                        <div class="color-btn ${el.color === c ? 'active' : ''}" 
+                             style="background: ${c}"
+                             onclick="updateElementColor('${c}')"></div>
+                    `).join('')}
+                </div>
+            </div>
+            <button class="w-full py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 mt-4" onclick="deleteSelected()">
+                <i class="fas fa-trash mr-2"></i> Delete
+            </button>
+        `;
+    } else if (el.type === 'image') {
+        panel.innerHTML = `
+            <div class="property-group">
+                <label class="property-label">Size</label>
+                <div class="slider-control">
+                    <input type="range" class="slider" min="50" max="500" value="${el.width}" oninput="updateImageSize(this.value)">
+                    <span class="slider-value">${Math.round(el.width)}px</span>
+                </div>
+            </div>
+            <button class="w-full py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 mt-4" onclick="deleteSelected()">
+                <i class="fas fa-trash mr-2"></i> Delete Image
+            </button>
+        `;
+    }
+}
+
+function updateElementText(text) {
+    if (selectedElement) {
+        selectedElement.text = text;
+        draw();
+        updateLayers();
+    }
+}
+
+function updateElementFont(font) {
+    if (selectedElement) {
+        selectedElement.font = font;
+        draw();
+    }
+}
+
+function updateElementSize(size) {
+    if (selectedElement) {
+        selectedElement.size = parseInt(size);
+        event.target.nextElementSibling.textContent = size + 'px';
+        draw();
+    }
+}
+
+function updateElementColor(color) {
+    if (selectedElement) {
+        selectedElement.color = color;
+        draw();
+        updateProperties();
+    }
+}
+
+function updateElementEffect(effect) {
+    if (selectedElement) {
+        selectedElement.effect = effect;
+        draw();
+        updateProperties();
+    }
+}
+
+function updateImageSize(size) {
+    if (selectedElement && selectedElement.type === 'image') {
+        const ratio = selectedElement.height / selectedElement.width;
+        selectedElement.width = parseInt(size);
+        selectedElement.height = parseInt(size) * ratio;
+        event.target.nextElementSibling.textContent = Math.round(size) + 'px';
+        draw();
+    }
+}
+
+function deleteSelected() {
+    if (selectedElement) {
+        elements = elements.filter(el => el !== selectedElement);
+        selectedElement = null;
+        draw();
+        updateProperties();
+        updateLayers();
+    }
+}
+
+// ==================== LAYERS ====================
+function updateLayers() {
+    const list = document.getElementById('layers-list');
+    
+    if (elements.length === 0) {
+        list.innerHTML = '<div class="empty-state" style="padding: 20px;"><div class="text-sm">No layers yet</div></div>';
+        return;
+    }
+    
+    list.innerHTML = elements.slice().reverse().map(el => `
+        <div class="layer-item ${selectedElement === el ? 'active' : ''}" onclick="selectLayer(${el.id})">
+            <div class="layer-icon">
+                ${el.type === 'text' ? 'T' : el.type === 'image' ? '🖼️' : '⬜'}
+            </div>
+            <div class="layer-info">
+                <div class="layer-name">${(el.text || el.type).substring(0, 20)}</div>
+                <div class="layer-type">${el.type}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function selectLayer(id) {
+    selectedElement = elements.find(el => el.id === id);
+    draw();
+    updateProperties();
+    updateLayers();
+}
+
+// ==================== TEMPLATES & TOOLS ====================
+function applyTemplate(template) {
+    currentTemplate = template;
+    
+    if (template.startsWith('story')) {
+        canvas.width = 450;
+        canvas.height = 800;
+    } else if (template === 'youtube') {
+        canvas.width = 1280;
+        canvas.height = 720;
+    } else {
+        canvas.width = 600;
+        canvas.height = 600;
+    }
+    
+    // Update text colors for minimal
+    if (template === 'minimal') {
+        elements.forEach(el => {
+            if (el.type === 'text') el.color = '#000000';
+        });
+    }
+    
+    draw();
+    showToast(template + ' template applied!');
+}
+
+function resizeCanvas(size) {
+    const sizes = {
+        instagram: [600, 600],
+        story: [450, 800],
+        youtube: [1280, 720]
+    };
+    
+    if (size === 'story' && !isPro) {
+        showModal('pro-modal');
+        return;
+    }
+    
+    const [w, h] = sizes[size];
+    canvas.width = w;
+    canvas.height = h;
+    
+    // Center elements
+    elements.forEach(el => {
+        el.x = w/2 - el.width/2;
+        el.y = h/2 - el.height/2;
+    });
+    
+    draw();
+    showToast('Canvas resized');
+}
+
+function switchTab(tab, btn) {
+    document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    
+    document.querySelectorAll('.sidebar-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('tab-' + tab).classList.remove('hidden');
+}
+
+function setZoom(val) {
+    zoom = val;
+    canvas.style.transform = `scale(${val/100})`;
+    document.getElementById('zoom-text').textContent = val + '%';
+}
+
+function adjustZoom(delta) {
+    zoom = Math.max(50, Math.min(150, zoom + delta));
+    setZoom(zoom);
+}
+
+// ==================== EXPORT - YEH SABSE IMPORTANT HAI ====================
+function exportImage() {
+    // Show modal with options
+    document.getElementById('modal-free-count').textContent = freeUses;
+    showModal('export-modal');
+}
+
+function downloadImage(quality) {
+    if (freeUses <= 0 && !isPro) {
+        closeModal('export-modal');
+        showModal('pro-modal');
+        return;
+    }
+    
+    // Show loading
+    const btn = event.currentTarget;
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<div class="loading"></div> Processing...';
+    
+    setTimeout(() => {
+        try {
+            // Create download link
+            const link = document.createElement('a');
+            
+            // Generate filename
+            const filename = `danish-poster-${Date.now()}.png`;
+            
+            // Get canvas data
+            const dataURL = canvas.toDataURL('image/png', 1.0);
+            
+            // Set download attributes
+            link.download = filename;
+            link.href = dataURL;
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Update free uses
+            if (!isPro) {
+                freeUses--;
+                localStorage.setItem('danishPosterUses', freeUses);
+                updateFreeCounter();
+            }
+            
+            // Close modal and show success
+            closeModal('export-modal');
+            showToast('✅ Image downloaded successfully!');
+            
+            console.log('Downloaded:', filename);
+            
+        } catch (error) {
+            console.error('Download error:', error);
+            showToast('❌ Error downloading. Try again.');
+        }
+        
+        // Restore button
+        btn.innerHTML = originalHTML;
+        
+    }, 500);
+}
+
+function checkProDownload(type) {
+    if (!isPro) {
+        closeModal('export-modal');
+        showModal('pro-modal');
+    } else {
+        downloadImage(type);
+    }
+}
+
+function updateFreeCounter() {
+    document.getElementById('free-counter').textContent = freeUses;
+    if (freeUses === 0 && !isPro) {
+        document.getElementById('free-counter').classList.remove('text-green-400');
+        document.getElementById('free-counter').classList.add('text-red-400');
+    }
+}
+
+// ==================== MODALS ====================
+function showModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+
+function upgradeToPro() {
+    isPro = true;
+    closeModal('pro-modal');
+    document.getElementById('free-counter').textContent = 'PRO';
+    document.getElementById('free-counter').classList.remove('text-green-400', 'text-red-400');
+    document.getElementById('free-counter').classList.add('text-yellow-400');
+    showToast('🎉 Welcome to Pro!');
+}
+
+// ==================== UTILITIES ====================
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function renameFile() {
+    const name = prompt('Enter design name:', 'Untitled Design');
+    if (name) {
+        document.getElementById('file-name-text').textContent = name;
+    }
+}
+
+function undo() { showToast('Undo: Ctrl+Z (coming soon)'); }
+function redo() { showToast('Redo: Ctrl+ ‌‍
