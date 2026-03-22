@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PosterPro - Social Media Poster Generator</title>
+    <title>Danish Poster - Social Media Poster Generator</title>
     <meta name="description" content="Create stunning social media posters in seconds. Professional designs for Instagram, Pinterest, YouTube, and more.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -32,47 +32,71 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             transition: all 0.3s ease;
             position: relative;
-            cursor: default;
+            overflow: hidden;
         }
         
-        .poster-container.dragging {
-            cursor: move;
-        }
-        
-        /* Draggable Elements */
         .draggable-element {
             position: absolute;
             cursor: move;
             user-select: none;
-            transition: box-shadow 0.2s;
+            min-width: 50px;
+            min-height: 30px;
         }
         
         .draggable-element:hover {
-            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.5);
+            outline: 2px dashed rgba(102, 126, 234, 0.6);
         }
         
         .draggable-element.selected {
-            box-shadow: 0 0 0 3px #667eea;
+            outline: 3px solid #667eea;
+            z-index: 1000;
+        }
+        
+        .draggable-element.selected .delete-btn {
+            display: flex;
         }
         
         .resize-handle {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: white;
             border: 2px solid #667eea;
             border-radius: 50%;
             display: none;
+            z-index: 1001;
         }
         
         .draggable-element.selected .resize-handle {
             display: block;
         }
         
-        .resize-handle.nw { top: -6px; left: -6px; cursor: nw-resize; }
-        .resize-handle.ne { top: -6px; right: -6px; cursor: ne-resize; }
-        .resize-handle.sw { bottom: -6px; left: -6px; cursor: sw-resize; }
-        .resize-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
+        .resize-handle.nw { top: -7px; left: -7px; cursor: nw-resize; }
+        .resize-handle.ne { top: -7px; right: -7px; cursor: ne-resize; }
+        .resize-handle.sw { bottom: -7px; left: -7px; cursor: sw-resize; }
+        .resize-handle.se { bottom: -7px; right: -7px; cursor: se-resize; }
+        
+        .delete-btn {
+            position: absolute;
+            top: -30px;
+            right: -10px;
+            width: 24px;
+            height: 24px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 1002;
+        }
+        
+        .delete-btn:hover {
+            background: #dc2626;
+        }
         
         .pattern-dots {
             background-image: radial-gradient(circle, rgba(255,255,255,0.2) 1.5px, transparent 1.5px);
@@ -122,11 +146,6 @@
         
         .gradient-btn:hover { transform: scale(1.1); }
         .gradient-btn.active { border-color: #1f2937; box-shadow: 0 0 0 2px white, 0 0 0 4px #1f2937; }
-        
-        .font-btn.active {
-            background: #1f2937;
-            color: white;
-        }
         
         input[type="color"] {
             -webkit-appearance: none;
@@ -197,8 +216,6 @@
             font-weight: bold;
         }
         
-        .hidden-section { display: none; }
-        
         .watermark {
             position: absolute;
             bottom: 20px;
@@ -208,7 +225,6 @@
             font-family: 'Inter', sans-serif;
         }
         
-        /* Export Quality Selector */
         .quality-btn {
             padding: 8px 16px;
             border-radius: 8px;
@@ -223,6 +239,18 @@
             background: rgba(102, 126, 234, 0.1);
             color: #667eea;
         }
+
+        .text-content {
+            outline: none;
+            min-width: 20px;
+            display: inline-block;
+        }
+
+        .text-content:empty:before {
+            content: attr(data-placeholder);
+            color: rgba(255,255,255,0.5);
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -232,8 +260,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center gap-2">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-xl">P</div>
-                <span class="text-2xl font-black text-gray-900 tracking-tight">PosterPro</span>
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-xl">D</div>
+                <span class="text-2xl font-black text-gray-900 tracking-tight">Danish Poster</span>
             </div>
             <nav class="hidden md:flex gap-8">
                 <a href="#generator" class="text-gray-600 hover:text-gray-900 font-medium">Generator</a>
@@ -258,7 +286,7 @@
         </h1>
         <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             No design skills needed. Professional-grade posters for Instagram, Pinterest, YouTube, and more. 
-            Start your free trial today.
+            Drag & drop text anywhere. Full control over size and color.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <button onclick="scrollToGenerator()" class="btn-primary px-8 py-4 rounded-full text-white font-bold text-lg">
@@ -269,9 +297,9 @@
             </button>
         </div>
         <div class="mt-8 flex items-center justify-center gap-6 text-sm text-gray-500">
-            <span class="flex items-center gap-1">✓ No credit card required</span>
-            <span class="flex items-center gap-1">✓ 5 free posters</span>
-            <span class="flex items-center gap-1">✓ Cancel anytime</span>
+            <span class="flex items-center gap-1">✓ Drag & Drop Text</span>
+            <span class="flex items-center gap-1">✓ Resize Freely</span>
+            <span class="flex items-center gap-1">✓ Custom Colors</span>
         </div>
     </div>
 </section>
@@ -281,7 +309,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900">Design Your Poster</h2>
-            <p class="text-gray-600 mt-2">Choose your platform, customize, and download in HD</p>
+            <p class="text-gray-600 mt-2">Add text, drag anywhere, resize, change colors - Full Control!</p>
         </div>
         
         <div class="grid lg:grid-cols-12 gap-8">
@@ -336,35 +364,41 @@
                     </div>
                 </div>
 
-                <!-- Typography -->
+                <!-- Add Text Controls -->
                 <div class="bg-gray-50 rounded-2xl p-6">
-                    <h3 class="font-bold text-gray-800 mb-4 uppercase text-sm tracking-wide">Typography</h3>
-                    
-                    <input type="text" id="headline" placeholder="YOUR HEADLINE" oninput="updateText()" 
-                           class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 mb-3 focus:border-purple-500 focus:outline-none font-bold">
-                    
-                    <input type="text" id="subheadline" placeholder="Add your subheadline..." oninput="updateText()" 
-                           class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 mb-3 focus:border-purple-500 focus:outline-none">
-                    
-                    <input type="text" id="cta" placeholder="Call to action" oninput="updateText()" 
-                           class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 mb-4 focus:border-purple-500 focus:outline-none">
-                    
-                    <div class="grid grid-cols-3 gap-2 mb-4">
-                        <button onclick="setFont('bebas')" class="font-btn active px-3 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold font-bebas" data-font="bebas">BEBAS</button>
-                        <button onclick="setFont('playfair')" class="font-btn px-3 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold font-playfair" data-font="playfair">Playfair</button>
-                        <button onclick="setFont('montserrat')" class="font-btn px-3 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold font-montserrat" data-font="montserrat">Montserrat</button>
-                    </div>
+                    <h3 class="font-bold text-gray-800 mb-4 uppercase text-sm tracking-wide">Add Text (Drag & Drop)</h3>
                     
                     <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <input type="color" id="textColor" onchange="updateTextColor(this.value)" value="#ffffff" class="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-200">
-                            <span class="text-sm font-medium text-gray-600">Text Color</span>
+                        <button onclick="addNewText()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                            <span>+</span> Add New Text Box
+                        </button>
+                        
+                        <div id="selectedTextControls" class="hidden space-y-3 pt-4 border-t border-gray-200">
+                            <p class="text-sm font-semibold text-gray-700">Selected Text Options:</p>
+                            
+                            <div class="flex items-center gap-3">
+                                <input type="color" id="selectedTextColor" onchange="updateSelectedTextColor(this.value)" value="#ffffff" title="Text Color">
+                                <span class="text-sm font-medium text-gray-600">Text Color</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-500 w-12">Size</span>
+                                <input type="range" id="selectedTextSize" min="12" max="150" value="48" oninput="updateSelectedTextSize(this.value)" class="range-slider flex-1">
+                                <span id="selectedSizeDisplay" class="text-sm font-semibold w-8">48</span>
+                            </div>
+                            
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setSelectedFont('bebas')" class="font-btn px-2 py-2 rounded-lg border-2 border-gray-200 text-xs font-bold font-bebas" data-sfont="bebas">BEBAS</button>
+                                <button onclick="setSelectedFont('playfair')" class="font-btn px-2 py-2 rounded-lg border-2 border-gray-200 text-xs font-bold font-playfair" data-sfont="playfair">Playfair</button>
+                                <button onclick="setSelectedFont('montserrat')" class="font-btn px-2 py-2 rounded-lg border-2 border-gray-200 text-xs font-bold font-montserrat" data-sfont="montserrat">Montserrat</button>
+                            </div>
+                            
+                            <button onclick="deleteSelectedText()" class="w-full py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-all">
+                                🗑️ Delete Selected Text
+                            </button>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-sm text-gray-500 w-12">Size</span>
-                            <input type="range" id="textSize" min="24" max="120" value="64" oninput="updateTextSize(this.value)" class="range-slider flex-1">
-                            <span id="sizeDisplay" class="text-sm font-semibold w-8">64</span>
-                        </div>
+                        
+                        <p class="text-xs text-gray-500 text-center" id="noSelectionMsg">Click on any text to edit its color, size & font</p>
                     </div>
                 </div>
 
@@ -407,12 +441,12 @@
             <div class="lg:col-span-8">
                 <div class="bg-gray-100 rounded-2xl p-8 flex flex-col items-center">
                     <div class="flex justify-between items-center w-full mb-4 max-w-2xl">
-                        <h3 class="font-bold text-gray-800">Live Preview</h3>
+                        <h3 class="font-bold text-gray-800">Live Preview - Drag text anywhere!</h3>
                         <span id="dimensions" class="text-sm text-gray-500 font-mono bg-white px-3 py-1 rounded-full">1080 × 1080 px</span>
                     </div>
                     
                     <div class="overflow-auto p-4 bg-white rounded-xl shadow-inner">
-                        <div id="poster" class="poster-container gradient-1 relative overflow-hidden flex flex-col items-center justify-center text-center p-8 transition-all duration-500" 
+                        <div id="poster" class="poster-container gradient-1 relative flex flex-col items-center justify-center text-center p-8 transition-all duration-500" 
                              style="width: 400px; height: 400px;">
                             
                             <div id="pattern" class="absolute inset-0 pattern-dots opacity-30 pointer-events-none"></div>
@@ -422,50 +456,44 @@
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                             </div>
                             
-                            <!-- Draggable Text Elements -->
+                            <!-- Draggable Text Container -->
                             <div id="textContainer" class="absolute inset-0 pointer-events-none">
-                                <!-- Elements will be added here dynamically -->
+                                <!-- Text elements will be added here dynamically -->
                             </div>
                             
+                            <!-- Decorative Elements -->
                             <div class="absolute top-6 right-6 w-20 h-20 border-4 border-white/20 rounded-full animate-float pointer-events-none"></div>
                             <div class="absolute bottom-6 left-6 w-16 h-16 bg-white/10 rounded-2xl rotate-12 animate-float pointer-events-none" style="animation-delay: 1s;"></div>
                             <div class="absolute top-1/4 left-8 w-3 h-3 bg-white/60 rounded-full animate-pulse pointer-events-none"></div>
                             <div class="absolute top-1/3 right-12 w-2 h-2 bg-white/80 rounded-full animate-pulse pointer-events-none" style="animation-delay: 0.5s;"></div>
                             
-                            <!-- Static Content (for backward compatibility) -->
-                            <div class="relative z-10 max-w-full px-4 pointer-events-none" id="staticContent">
-                                <h1 id="posterHeadline" class="text-6xl font-black text-white mb-4 drop-shadow-2xl font-bebas leading-none tracking-wide">
-                                    YOUR<br>HEADLINE
-                                </h1>
-                                <p id="posterSub" class="text-xl text-white/90 mb-8 drop-shadow-lg font-montserrat font-medium max-w-sm">
-                                    Create stunning social media content that converts
-                                </p>
-                                <div id="posterCta" class="inline-block px-8 py-4 glass rounded-full text-white font-bold text-lg font-montserrat tracking-wide">
-                                    LEARN MORE →
-                                </div>
-                            </div>
-                            
-                            <div class="watermark" id="watermark">Made with PosterPro</div>
+                            <div class="watermark" id="watermark">Made with Danish Poster</div>
                         </div>
                     </div>
                     
-                    <!-- Drag Instructions -->
-                    <div class="mt-4 text-center text-sm text-gray-500">
-                        <p>💡 <strong>New:</strong> Click "Add Draggable Text" to create movable elements</p>
+                    <!-- Instructions -->
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-gray-600 mb-2">💡 <strong>How to use:</strong></p>
+                        <div class="flex flex-wrap justify-center gap-4 text-xs text-gray-500">
+                            <span class="bg-white px-3 py-1 rounded-full">1. Click "Add New Text Box"</span>
+                            <span class="bg-white px-3 py-1 rounded-full">2. Drag text anywhere</span>
+                            <span class="bg-white px-3 py-1 rounded-full">3. Click text to resize & change color</span>
+                            <span class="bg-white px-3 py-1 rounded-full">4. Double-click text to edit content</span>
+                        </div>
                     </div>
                     
                     <div class="mt-6 grid grid-cols-3 gap-4 w-full max-w-2xl text-sm">
                         <div class="bg-blue-50 p-4 rounded-xl border-l-4 border-blue-500">
-                            <strong class="text-blue-900 block mb-1">💡 Pro Tip</strong>
-                            <span class="text-blue-700">Keep headline under 8 words</span>
+                            <strong class="text-blue-900 block mb-1">🎯 Full Control</strong>
+                            <span class="text-blue-700">Drag, resize, color - complete freedom</span>
                         </div>
                         <div class="bg-purple-50 p-4 rounded-xl border-l-4 border-purple-500">
-                            <strong class="text-purple-900 block mb-1">🎨 Best Practice</strong>
-                            <span class="text-purple-700">High contrast = 40% more engagement</span>
+                            <strong class="text-purple-900 block mb-1">🎨 Unlimited Text</strong>
+                            <span class="text-purple-700">Add as many text boxes as you want</span>
                         </div>
                         <div class="bg-green-50 p-4 rounded-xl border-l-4 border-green-500">
-                            <strong class="text-green-900 block mb-1">📊 Data</strong>
-                            <span class="text-green-700">CTAs get 285% more clicks</span>
+                            <strong class="text-green-900 block mb-1">📱 All Platforms</strong>
+                            <span class="text-green-700">Perfect sizes for every social media</span>
                         </div>
                     </div>
                 </div>
@@ -489,10 +517,10 @@
                 <div class="text-4xl font-black text-gray-900 mb-6">$0<span class="text-lg font-normal text-gray-500">/month</span></div>
                 <ul class="space-y-4 mb-8">
                     <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 5 posters/month</li>
-                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Basic templates</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Drag & drop text</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Resize & color control</li>
                     <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Watermark on exports</li>
                     <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 1080p exports</li>
-                    <li class="flex items-center gap-2 text-gray-400"><span>✗</span> No commercial use</li>
                 </ul>
                 <button onclick="showSignup()" class="w-full py-3 border-2 border-gray-300 rounded-xl font-bold text-gray-700 hover:bg-gray-50">Get Started</button>
             </div>
@@ -504,7 +532,7 @@
                 <div class="text-4xl font-black text-gray-900 mb-6">$9<span class="text-lg font-normal text-gray-500">/month</span></div>
                 <ul class="space-y-4 mb-8">
                     <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Unlimited posters</li>
-                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> All templates</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Full drag & drop control</li>
                     <li class="flex items-center gap-2"><span class="text-green-500">✓</span> No watermark</li>
                     <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 4K exports</li>
                     <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Commercial license</li>
@@ -532,22 +560,22 @@
 <!-- Features -->
 <section id="features" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Why Choose PosterPro?</h2>
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Why Choose Danish Poster?</h2>
         <div class="grid md:grid-cols-3 gap-8">
             <div class="text-center p-6">
-                <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">⚡</div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Lightning Fast</h3>
-                <p class="text-gray-600">Create professional posters in 60 seconds. No learning curve, no design skills needed.</p>
+                <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🖱️</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Drag & Drop</h3>
+                <p class="text-gray-600">Full control over text placement. Drag anywhere on the canvas with pixel-perfect precision.</p>
             </div>
             <div class="text-center p-6">
                 <div class="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🎨</div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Premium Designs</h3>
-                <p class="text-gray-600">10+ gradient styles, professional fonts, and patterns that make your brand stand out.</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Full Customization</h3>
+                <p class="text-gray-600">Resize freely, change colors instantly, choose from multiple fonts. Every text box is fully editable.</p>
             </div>
             <div class="text-center p-6">
-                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">📱</div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">All Platforms</h3>
-                <p class="text-gray-600">Perfect sizes for Instagram, Pinterest, YouTube, Facebook, Twitter, and LinkedIn.</p>
+                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">⚡</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Lightning Fast</h3>
+                <p class="text-gray-600">Create professional posters in seconds. No learning curve, instant results.</p>
             </div>
         </div>
     </div>
@@ -559,10 +587,10 @@
         <div class="grid md:grid-cols-4 gap-8 mb-8">
             <div>
                 <div class="flex items-center gap-2 mb-4">
-                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">P</div>
-                    <span class="text-xl font-bold">PosterPro</span>
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">D</div>
+                    <span class="text-xl font-bold">Danish Poster</span>
                 </div>
-                <p class="text-gray-400 text-sm">Create stunning social media posters in seconds. Professional design made simple.</p>
+                <p class="text-gray-400 text-sm">Create stunning social media posters with full drag & drop control.</p>
             </div>
             <div>
                 <h4 class="font-bold mb-4">Product</h4>
@@ -589,7 +617,7 @@
             </div>
         </div>
         <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-            © 2026 PosterPro. All rights reserved.
+            © 2026 Danish Poster. All rights reserved.
         </div>
     </div>
 </footer>
@@ -608,13 +636,16 @@ const sizes = {
 
 let downloadCount = 5;
 let isPro = false;
-let exportQuality = 'hd'; // 'hd' or '4k'
+let exportQuality = 'hd';
 
-// Draggable elements array
-let draggableElements = [];
+// Draggable elements
 let selectedElement = null;
 let isDragging = false;
+let isResizing = false;
+let resizeHandle = null;
 let dragOffset = { x: 0, y: 0 };
+let initialSize = { w: 0, h: 0 };
+let initialPos = { x: 0, y: 0 };
 
 // Functions
 function setSize(platform) {
@@ -631,6 +662,7 @@ function setSize(platform) {
 function setGradient(cls) {
     const p = document.getElementById("poster");
     p.className = p.className.replace(/gradient-\d+/, cls);
+    p.style.background = "";
     
     document.querySelectorAll(".gradient-btn").forEach(b => b.classList.remove("active"));
     document.querySelector(`[data-gradient="${cls}"]`).classList.add("active");
@@ -653,91 +685,69 @@ function setQuality(quality) {
     document.querySelector(`[data-quality="${quality}"]`).classList.add("active");
 }
 
-function updateText() {
-    const h = document.getElementById("headline").value || "YOUR<br>HEADLINE";
-    const s = document.getElementById("subheadline").value || "Create stunning social media content that converts";
-    const c = document.getElementById("cta").value || "LEARN MORE →";
-    
-    document.getElementById("posterHeadline").innerHTML = h.replace(/\n/g, "<br>");
-    document.getElementById("posterSub").textContent = s;
-    document.getElementById("posterCta").textContent = c;
-}
+// ==================== ADD NEW TEXT ====================
 
-function setFont(font) {
-    const fonts = { bebas: "font-bebas", playfair: "font-playfair", montserrat: "font-montserrat" };
-    const h = document.getElementById("posterHeadline");
-    const s = document.getElementById("posterSub");
-    const c = document.getElementById("posterCta");
-    
-    [h, s, c].forEach(el => {
-        el.classList.remove("font-bebas", "font-playfair", "font-montserrat");
-        el.classList.add(fonts[font]);
-    });
-    
-    document.querySelectorAll(".font-btn").forEach(b => b.classList.remove("active"));
-    document.querySelector(`[data-font="${font}"]`).classList.add("active");
-}
-
-function updateTextColor(color) {
-    document.getElementById("posterHeadline").style.color = color;
-    document.getElementById("posterSub").style.color = color + "CC";
-    document.getElementById("posterCta").style.color = color;
-}
-
-function updateTextSize(size) {
-    document.getElementById("posterHeadline").style.fontSize = size + "px";
-    document.getElementById("sizeDisplay").textContent = size;
-}
-
-function handleImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById("bgImage").src = e.target.result;
-            document.getElementById("imageLayer").classList.remove("hidden");
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-function removeImage() {
-    document.getElementById("imageLayer").classList.add("hidden");
-    document.getElementById("imageUpload").value = "";
-}
-
-// ==================== DRAG & DROP ====================
-
-function createDraggableElement(type, content, x, y) {
+function addNewText() {
     const container = document.getElementById("textContainer");
+    const poster = document.getElementById("poster");
+    
     const el = document.createElement("div");
-    el.className = "draggable-element pointer-events-auto";
-    el.style.left = x + "px";
-    el.style.top = y + "px";
-    el.dataset.id = Date.now();
-    el.dataset.type = type;
+    el.className = "draggable-element";
     
-    if (type === "text") {
-        el.innerHTML = `
-            <div class="content text-4xl font-bold text-white drop-shadow-lg" style="font-family: 'Bebas Neue', sans-serif;">${content}</div>
-            <div class="resize-handle nw"></div>
-            <div class="resize-handle ne"></div>
-            <div class="resize-handle sw"></div>
-            <div class="resize-handle se"></div>
-        `;
-    }
+    // Center position
+    const centerX = (poster.offsetWidth / 2) - 75;
+    const centerY = (poster.offsetHeight / 2) - 25;
     
-    // Event listeners
+    el.style.left = centerX + "px";
+    el.style.top = centerY + "px";
+    el.style.fontSize = "48px";
+    el.style.color = "#ffffff";
+    el.style.fontFamily = "'Bebas Neue', sans-serif";
+    el.style.textShadow = "2px 2px 4px rgba(0,0,0,0.3)";
+    
+    el.innerHTML = `
+        <div class="text-content" contenteditable="true" data-placeholder="Click to edit text...">Double click to edit</div>
+        <div class="resize-handle nw"></div>
+        <div class="resize-handle ne"></div>
+        <div class="resize-handle sw"></div>
+        <div class="resize-handle se"></div>
+        <div class="delete-btn" onclick="deleteThisElement(event, this)">×</div>
+    `;
+    
+    // Make contenteditable work without triggering drag
+    const content = el.querySelector('.text-content');
+    content.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+    });
+    content.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+    }, { passive: false });
+    
+    // Event listeners for drag
     el.addEventListener("mousedown", startDrag);
     el.addEventListener("touchstart", startDragTouch, { passive: false });
     
+    // Add resize listeners to handles
+    const handles = el.querySelectorAll('.resize-handle');
+    handles.forEach(handle => {
+        handle.addEventListener('mousedown', startResize);
+        handle.addEventListener('touchstart', startResizeTouch, { passive: false });
+    });
+    
     container.appendChild(el);
-    draggableElements.push(el);
     selectElement(el);
     
-    return el;
+    // Focus the text
+    setTimeout(() => {
+        content.focus();
+        document.execCommand('selectAll', false, null);
+    }, 100);
 }
 
+// ==================== DRAG ====================
+
 function startDrag(e) {
+    if (isResizing) return;
     e.preventDefault();
     e.stopPropagation();
     
@@ -756,6 +766,7 @@ function startDrag(e) {
 }
 
 function startDragTouch(e) {
+    if (isResizing) return;
     e.preventDefault();
     e.stopPropagation();
     
@@ -821,13 +832,255 @@ function stopDragTouch() {
     document.removeEventListener("touchend", stopDragTouch);
 }
 
-function selectElement(el) {
-    draggableElements.forEach(e => e.classList.remove("selected"));
-    el.classList.add("selected");
-    selectedElement = el;
+// ==================== RESIZE ====================
+
+function startResize(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    isResizing = true;
+    resizeHandle = e.target.className.includes('nw') ? 'nw' : 
+                   e.target.className.includes('ne') ? 'ne' :
+                   e.target.className.includes('sw') ? 'sw' : 'se';
+    
+    const el = selectedElement;
+    initialSize.w = el.offsetWidth;
+    initialSize.h = el.offsetHeight;
+    initialPos.x = el.offsetLeft;
+    initialPos.y = el.offsetTop;
+    
+    dragOffset.x = e.clientX;
+    dragOffset.y = e.clientY;
+    
+    document.addEventListener("mousemove", resize);
+    document.addEventListener("mouseup", stopResize);
 }
 
-// ==================== HIGH QUALITY EXPORT ====================
+function startResizeTouch(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    isResizing = true;
+    const touch = e.touches[0];
+    resizeHandle = e.target.className.includes('nw') ? 'nw' : 
+                   e.target.className.includes('ne') ? 'ne' :
+                   e.target.className.includes('sw') ? 'sw' : 'se';
+    
+    const el = selectedElement;
+    initialSize.w = el.offsetWidth;
+    initialSize.h = el.offsetHeight;
+    initialPos.x = el.offsetLeft;
+    initialPos.y = el.offsetTop;
+    
+    dragOffset.x = touch.clientX;
+    dragOffset.y = touch.clientY;
+    
+    document.addEventListener("touchmove", resizeTouch, { passive: false });
+    document.addEventListener("touchend", stopResizeTouch);
+}
+
+function resize(e) {
+    if (!isResizing || !selectedElement) return;
+    e.preventDefault();
+    
+    const dx = e.clientX - dragOffset.x;
+    const dy = e.clientY - dragOffset.y;
+    
+    let newW = initialSize.w;
+    let newH = initialSize.h;
+    let newX = initialPos.x;
+    let newY = initialPos.y;
+    
+    if (resizeHandle === 'se') {
+        newW = Math.max(50, initialSize.w + dx);
+        newH = Math.max(30, initialSize.h + dy);
+    } else if (resizeHandle === 'sw') {
+        newW = Math.max(50, initialSize.w - dx);
+        newH = Math.max(30, initialSize.h + dy);
+        newX = initialPos.x + dx;
+    } else if (resizeHandle === 'ne') {
+        newW = Math.max(50, initialSize.w + dx);
+        newH = Math.max(30, initialSize.h - dy);
+        newY = initialPos.y + dy;
+    } else if (resizeHandle === 'nw') {
+        newW = Math.max(50, initialSize.w - dx);
+        newH = Math.max(30, initialSize.h - dy);
+        newX = initialPos.x + dx;
+        newY = initialPos.y + dy;
+    }
+    
+    selectedElement.style.width = newW + "px";
+    selectedElement.style.height = newH + "px";
+    selectedElement.style.left = newX + "px";
+    selectedElement.style.top = newY + "px";
+}
+
+function resizeTouch(e) {
+    if (!isResizing || !selectedElement) return;
+    e.preventDefault();
+    
+    const touch = e.touches[0];
+    const dx = touch.clientX - dragOffset.x;
+    const dy = touch.clientY - dragOffset.y;
+    
+    let newW = initialSize.w;
+    let newH = initialSize.h;
+    let newX = initialPos.x;
+    let newY = initialPos.y;
+    
+    if (resizeHandle === 'se') {
+        newW = Math.max(50, initialSize.w + dx);
+        newH = Math.max(30, initialSize.h + dy);
+    } else if (resizeHandle === 'sw') {
+        newW = Math.max(50, initialSize.w - dx);
+        newH = Math.max(30, initialSize.h + dy);
+        newX = initialPos.x + dx;
+    } else if (resizeHandle === 'ne') {
+        newW = Math.max(50, initialSize.w + dx);
+        newH = Math.max(30, initialSize.h - dy);
+        newY = initialPos.y + dy;
+    } else if (resizeHandle === 'nw') {
+        newW = Math.max(50, initialSize.w - dx);
+        newH = Math.max(30, initialSize.h - dy);
+        newX = initialPos.x + dx;
+        newY = initialPos.y + dy;
+    }
+    
+    selectedElement.style.width = newW + "px";
+    selectedElement.style.height = newH + "px";
+    selectedElement.style.left = newX + "px";
+    selectedElement.style.top = newY + "px";
+}
+
+function stopResize() {
+    isResizing = false;
+    resizeHandle = null;
+    document.removeEventListener("mousemove", resize);
+    document.removeEventListener("mouseup", stopResize);
+}
+
+function stopResizeTouch() {
+    isResizing = false;
+    resizeHandle = null;
+    document.removeEventListener("touchmove", resizeTouch);
+    document.removeEventListener("touchend", stopResizeTouch);
+}
+
+// ==================== SELECTION & CONTROLS ====================
+
+function selectElement(el) {
+    // Deselect all
+    document.querySelectorAll(".draggable-element").forEach(e => e.classList.remove("selected"));
+    
+    // Select this one
+    el.classList.add("selected");
+    selectedElement = el;
+    
+    // Show controls
+    document.getElementById("selectedTextControls").classList.remove("hidden");
+    document.getElementById("noSelectionMsg").classList.add("hidden");
+    
+    // Update control values
+    const content = el.querySelector('.text-content');
+    const computed = window.getComputedStyle(content);
+    
+    // Get current color
+    const rgb = computed.color.match(/\d+/g);
+    if (rgb) {
+        const hex = "#" + ((1 << 24) + (parseInt(rgb[0]) << 16) + (parseInt(rgb[1]) << 8) + parseInt(rgb[2])).toString(16).slice(1);
+        document.getElementById("selectedTextColor").value = hex;
+    }
+    
+    // Get current size
+    const fontSize = parseInt(computed.fontSize);
+    document.getElementById("selectedTextSize").value = fontSize;
+    document.getElementById("selectedSizeDisplay").textContent = fontSize;
+    
+    // Update font buttons
+    const fontFamily = computed.fontFamily;
+    document.querySelectorAll('[data-sfont]').forEach(btn => btn.classList.remove('active'));
+    if (fontFamily.includes('Bebas')) document.querySelector('[data-sfont="bebas"]').classList.add('active');
+    else if (fontFamily.includes('Playfair')) document.querySelector('[data-sfont="playfair"]').classList.add('active');
+    else if (fontFamily.includes('Montserrat')) document.querySelector('[data-sfont="montserrat"]').classList.add('active');
+}
+
+function updateSelectedTextColor(color) {
+    if (selectedElement) {
+        selectedElement.querySelector('.text-content').style.color = color;
+    }
+}
+
+function updateSelectedTextSize(size) {
+    if (selectedElement) {
+        selectedElement.querySelector('.text-content').style.fontSize = size + "px";
+        document.getElementById("selectedSizeDisplay").textContent = size;
+    }
+}
+
+function setSelectedFont(font) {
+    if (!selectedElement) return;
+    
+    const fonts = { 
+        bebas: "'Bebas Neue', sans-serif", 
+        playfair: "'Playfair Display', serif", 
+        montserrat: "'Montserrat', sans-serif" 
+    };
+    
+    selectedElement.querySelector('.text-content').style.fontFamily = fonts[font];
+    
+    document.querySelectorAll("[data-sfont]").forEach(b => b.classList.remove("active"));
+    document.querySelector(`[data-sfont="${font}"]`).classList.add("active");
+}
+
+function deleteSelectedText() {
+    if (selectedElement) {
+        selectedElement.remove();
+        selectedElement = null;
+        document.getElementById("selectedTextControls").classList.add("hidden");
+        document.getElementById("noSelectionMsg").classList.remove("hidden");
+    }
+}
+
+function deleteThisElement(e, btn) {
+    e.stopPropagation();
+    const el = btn.closest('.draggable-element');
+    if (el === selectedElement) {
+        selectedElement = null;
+        document.getElementById("selectedTextControls").classList.add("hidden");
+        document.getElementById("noSelectionMsg").classList.remove("hidden");
+    }
+    el.remove();
+}
+
+// Click outside to deselect
+document.getElementById("poster").addEventListener("click", function(e) {
+    if (e.target === this || e.target.id === "pattern" || e.target.id === "imageLayer") {
+        document.querySelectorAll(".draggable-element").forEach(e => e.classList.remove("selected"));
+        selectedElement = null;
+        document.getElementById("selectedTextControls").classList.add("hidden");
+        document.getElementById("noSelectionMsg").classList.remove("hidden");
+    }
+});
+
+// ==================== IMAGE ====================
+
+function handleImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("bgImage").src = e.target.result;
+            document.getElementById("imageLayer").classList.remove("hidden");
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function removeImage() {
+    document.getElementById("imageLayer").classList.add("hidden");
+    document.getElementById("imageUpload").value = "";
+}
+
+// ==================== EXPORT ====================
 
 function downloadPoster() {
     if (downloadCount <= 0 && !isPro) {
@@ -848,28 +1101,21 @@ function downloadPoster() {
         watermark.style.display = "none";
     }
     
-    // Calculate scale based on quality
-    const scale = exportQuality === '4k' ? 5.4 : 2.7; // 4K or HD (1080p)
+    // Deselect all before export
+    document.querySelectorAll(".draggable-element").forEach(e => e.classList.remove("selected"));
     
-    // Temporarily hide selection boxes
-    const selections = document.querySelectorAll(".draggable-element.selected");
-    selections.forEach(el => el.classList.remove("selected"));
+    const scale = exportQuality === '4k' ? 5.4 : 2.7;
     
     html2canvas(poster, { 
         scale: scale,
         useCORS: true,
         backgroundColor: null,
         logging: false,
-        allowTaint: true,
-        imageTimeout: 0
+        allowTaint: true
     }).then(canvas => {
-        // Restore selections
-        selections.forEach(el => el.classList.add("selected"));
-        
-        // Create download
         const link = document.createElement("a");
         const quality = exportQuality === '4k' ? '4K' : 'HD';
-        link.download = `poster-${quality}-${Date.now()}.png`;
+        link.download = `danish-poster-${quality}-${Date.now()}.png`;
         link.href = canvas.toDataURL("image/png", 1.0);
         link.click();
         
@@ -882,39 +1128,21 @@ function downloadPoster() {
 
 function randomize() {
     const gradients = ["gradient-1", "gradient-2", "gradient-3", "gradient-4", "gradient-5", "gradient-6", "gradient-7", "gradient-8", "gradient-9", "gradient-10"];
-    const fonts = ["bebas", "playfair", "montserrat"];
-    
     setGradient(gradients[Math.floor(Math.random() * gradients.length)]);
-    setFont(fonts[Math.floor(Math.random() * fonts.length)]);
-    
-    const headlines = ["BOOST YOUR\nSALES", "NEW ARRIVAL\n2026", "LIMITED\nTIME OFFER", "JOIN THE\nMOVEMENT", "EXCLUSIVE\nDEAL"];
-    const subs = ["Discover what makes us different", "Transform your business today", "Join 10,000+ happy customers", "Don't miss out on this opportunity"];
-    const ctas = ["SHOP NOW", "GET STARTED", "LEARN MORE", "SIGN UP FREE"];
-    
-    document.getElementById("headline").value = headlines[Math.floor(Math.random() * headlines.length)];
-    document.getElementById("subheadline").value = subs[Math.floor(Math.random() * subs.length)];
-    document.getElementById("cta").value = ctas[Math.floor(Math.random() * ctas.length)];
-    updateText();
 }
 
 function resetAll() {
-    document.getElementById("headline").value = "";
-    document.getElementById("subheadline").value = "";
-    document.getElementById("cta").value = "";
-    updateText();
+    // Clear all text
+    document.getElementById("textContainer").innerHTML = "";
+    selectedElement = null;
+    document.getElementById("selectedTextControls").classList.add("hidden");
+    document.getElementById("noSelectionMsg").classList.remove("hidden");
+    
+    // Reset other settings
     setGradient("gradient-1");
     togglePattern("dots");
     removeImage();
     setSize("instagram");
-    setFont("bebas");
-    updateTextSize(64);
-    document.getElementById("textColor").value = "#ffffff";
-    updateTextColor("#ffffff");
-    
-    // Clear draggable elements
-    document.getElementById("textContainer").innerHTML = "";
-    draggableElements = [];
-    selectedElement = null;
 }
 
 // Navigation
@@ -935,7 +1163,6 @@ function showVideo() {
 }
 
 function showToast(message) {
-    // Simple toast notification
     const toast = document.createElement("div");
     toast.className = "fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full text-sm z-50";
     toast.textContent = message;
@@ -944,7 +1171,7 @@ function showToast(message) {
 }
 
 // Initialize
-updateText();
+resetAll();
 </script>
 
 </body>
