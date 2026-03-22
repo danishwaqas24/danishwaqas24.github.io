@@ -2,632 +2,375 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Danish Poster | Mobile-First Design Studio</title>
-    <meta name="description" content="Professional poster design - works perfectly on mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danish Poster | AI-Powered Design Studio</title>
+    <meta name="description" content="Professional poster design with AI, drag-drop editor, 4K exports. 7 free designs.">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Bebas+Neue&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Bebas+Neue&family=Playfair+Display:wght@700&family=Montserrat:wght@400;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
             --primary: #667eea;
             --secondary: #764ba2;
+            --accent: #f093fb;
             --dark: #0f0f23;
             --darker: #050510;
         }
         
-        html, body { 
+        body { 
             font-family: 'Inter', sans-serif;
-            background: var(--darker);
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
             color: #fff;
-            height: 100%;
-            overflow: hidden;
-            touch-action: none;
+            min-height: 100vh;
         }
         
-        /* Mobile-First Layout */
-        .mobile-container {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            max-width: 100vw;
-            overflow: hidden;
-        }
-        
-        /* Header */
-        .mobile-header {
+        /* Glass Effects */
+        .glass-panel {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-shrink: 0;
-            z-index: 100;
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
         
-        /* Main Workspace - Fixed Ratio */
-        .workspace {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        /* Canvas Container - Always Centered */
-        .canvas-wrapper {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            background: rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Fixed Canvas Size with Scaling */
-        #design-canvas {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        /* Bottom Tools - Fixed Height */
-        .tools-panel {
-            background: rgba(255, 255, 255, 0.03);
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 12px 16px;
-            flex-shrink: 0;
-            max-height: 45vh;
-            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        /* Horizontal Scroll Sections */
-        .scroll-section {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 8px 0;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+        /* Premium Gradients */
+        .gradient-premium-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+        .gradient-premium-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ff9a9e 100%); }
+        .gradient-premium-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%); }
+        .gradient-cinematic { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%), linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+        .gradient-dark-mood { background: radial-gradient(ellipse at top, #1a1a2e 0%, #0f0f23 50%, #000000 100%); }
+        
+        /* Text Effects */
+        .effect-neon { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor; }
+        .effect-shadow { text-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
+        .effect-3d { text-shadow: 1px 1px 0 #999, 2px 2px 0 #888, 3px 3px 0 #777, 4px 4px 0 #666, 5px 5px 0 #555; }
+        
+        /* AI Button Pulse */
+        @keyframes ai-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            50% { box-shadow: 0 0 0 15px rgba(102, 126, 234, 0); }
         }
         
-        .scroll-section::-webkit-scrollbar {
-            display: none;
-        }
-        
-        /* Tool Buttons */
-        .tool-btn {
-            flex-shrink: 0;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            min-width: 70px;
-        }
-        
-        .tool-btn:active {
-            background: rgba(102, 126, 234, 0.3);
-            border-color: var(--primary);
-            transform: scale(0.95);
-        }
-        
-        .tool-btn .icon {
-            font-size: 24px;
-        }
-        
-        /* Quick Actions Bar */
-        .quick-actions {
-            display: flex;
-            gap: 8px;
-            padding: 8px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 8px;
-        }
-        
-        .action-btn {
-            flex: 1;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        
-        .btn-primary {
+        .ai-btn {
+            animation: ai-pulse 2s infinite;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
         }
         
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
-        
-        /* Modals - Full Screen Mobile */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-header {
-            padding: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .modal-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-        }
-        
-        /* Form Elements */
-        .input-field {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            margin-bottom: 12px;
-        }
-        
-        .input-field:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        /* Color Picker Grid */
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .color-btn {
-            aspect-ratio: 1;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            position: relative;
-        }
-        
-        .color-btn.active {
-            border-color: #fff;
-            box-shadow: 0 0 0 3px var(--primary);
-        }
-        
-        /* Size Selector */
-        .size-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        
-        .size-btn {
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .size-btn.active {
-            border-color: var(--primary);
-            background: rgba(102, 126, 234, 0.2);
-        }
-        
-        .size-btn .label {
-            font-size: 14px;
-            font-weight: 600;
-            display: block;
-            margin-bottom: 4px;
-        }
-        
-        .size-btn .ratio {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        /* Layer List */
-        .layer-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            margin-bottom: 8px;
-        }
-        
-        .layer-item.active {
-            background: rgba(102, 126, 234, 0.2);
-            border: 1px solid var(--primary);
-        }
-        
-        /* Touch Optimized Canvas */
-        .canvas-container {
-            position: relative;
-            touch-action: none;
-        }
-        
-        /* Floating Edit Button */
-        .fab-edit {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
-            z-index: 50;
-        }
-        
-        /* Usage Badge */
-        .usage-badge {
-            background: rgba(102, 126, 234, 0.2);
-            border: 1px solid rgba(102, 126, 234, 0.5);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        /* Text Effects Preview */
-        .effect-btn {
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            text-align: center;
-            font-size: 18px;
-        }
-        
-        .effect-neon { text-shadow: 0 0 10px #667eea, 0 0 20px #667eea; color: #fff; }
-        .effect-shadow { text-shadow: 3px 3px 0 rgba(0,0,0,0.5); }
-        .effect-3d { text-shadow: 1px 1px 0 #999, 2px 2px 0 #777, 3px 3px 0 #555; }
+        /* Fonts */
+        .font-bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.02em; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
         
         /* Premium Badge */
-        .badge-pro {
+        .premium-badge {
             background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
             color: #000;
-            font-size: 10px;
             font-weight: bold;
+            font-size: 10px;
             padding: 2px 8px;
             border-radius: 10px;
+            text-transform: uppercase;
         }
         
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 24px;
-            font-size: 14px;
-            opacity: 0;
-            transition: all 0.3s;
-            z-index: 2000;
+        /* Canvas */
+        #design-canvas {
+            background: #000;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            max-width: 100%;
+            max-height: 70vh;
         }
         
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--darker); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 1024px) {
+            .sidebar-left { display: none; position: fixed; left: 0; top: 64px; bottom: 0; width: 80%; z-index: 100; overflow-y: auto; }
+            .sidebar-right { display: none; position: fixed; right: 0; top: 64px; bottom: 0; width: 80%; z-index: 100; overflow-y: auto; }
+            .sidebar-left.active, .sidebar-right.active { display: block; }
+            .mobile-menu-btn { display: flex !important; }
+            .canvas-area { padding: 10px !important; }
         }
         
-        /* Prevent text selection */
-        .no-select {
-            -webkit-user-select: none;
-            user-select: none;
+        @media (min-width: 1025px) {
+            .mobile-menu-btn { display: none !important; }
+            .sidebar-left, .sidebar-right { display: block !important; position: relative !important; width: 320px !important; top: 0 !important; }
         }
         
-        /* Safe area for notched phones */
+        /* Touch Optimized */
+        .touch-btn {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Prevent zoom on input focus */
+        input, textarea, select { font-size: 16px; }
+        
+        /* Safe areas */
         @supports (padding-top: env(safe-area-inset-top)) {
-            .mobile-header {
-                padding-top: max(12px, env(safe-area-inset-top));
-            }
-            
-            .tools-panel {
-                padding-bottom: max(12px, env(safe-area-inset-bottom));
-            }
+            .safe-top { padding-top: env(safe-area-inset-top); }
+            .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
         }
     </style>
 </head>
-<body class="no-select">
+<body class="text-white overflow-hidden">
 
-<div class="mobile-container">
-    
-    <!-- Header -->
-    <header class="mobile-header">
+<!-- Header -->
+<header class="glass-panel sticky top-0 z-50 border-b border-white/10 safe-top">
+    <div class="max-w-full mx-auto px-4 h-16 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center font-bold text-lg">D</div>
-            <div>
-                <div class="font-bold text-lg leading-tight">Danish Poster</div>
-                <div class="text-xs text-gray-400">AI Studio</div>
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
+                <span class="text-xl font-bold">D</span>
+            </div>
+            <div class="hidden sm:block">
+                <span class="text-xl font-black tracking-tight">Danish Poster</span>
+                <span class="text-xs text-gray-400 block">AI-Powered Studio</span>
             </div>
         </div>
-        <div class="usage-badge">
-            <span id="free-count">7</span> free
+        
+        <div class="flex items-center gap-3">
+            <!-- Usage Counter -->
+            <div class="glass-panel px-3 py-1.5 rounded-full flex items-center gap-2">
+                <span class="text-xs text-gray-300 hidden sm:inline">Free:</span>
+                <span id="free-uses" class="text-lg font-bold text-purple-400">7</span>
+            </div>
+            
+            <!-- Mobile Menu Buttons -->
+            <button onclick="toggleSidebar('left')" class="mobile-menu-btn lg:hidden touch-btn p-2 rounded-lg bg-white/10">
+                ⚙️
+            </button>
+            <button onclick="toggleSidebar('right')" class="mobile-menu-btn lg:hidden touch-btn p-2 rounded-lg bg-white/10">
+                📚
+            </button>
+            
+            <button onclick="showUpgrade()" class="ai-btn hidden sm:block px-4 py-2 rounded-full font-bold text-sm">
+                Upgrade Pro
+            </button>
         </div>
-    </header>
+    </div>
+</header>
+
+<!-- Main Workspace -->
+<div class="flex h-[calc(100vh-64px)] overflow-hidden">
     
-    <!-- Main Workspace -->
-    <div class="workspace">
+    <!-- Left Sidebar: Tools -->
+    <div id="sidebar-left" class="sidebar-left glass-panel border-r border-white/10 w-80 overflow-y-auto safe-bottom">
+        
+        <!-- AI Headline Generator -->
+        <div class="p-4 border-b border-white/10">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="text-2xl">🤖</span>
+                <h3 class="font-bold text-sm uppercase tracking-wide">AI Headline Gen</h3>
+                <span class="premium-badge">PRO</span>
+            </div>
+            <input type="text" id="ai-topic" placeholder="Enter your topic..." 
+                   class="w-full px-3 py-2 bg-black/30 border border-white/20 rounded-lg text-sm mb-2 focus:border-purple-500 focus:outline-none">
+            <button onclick="generateAIHeadline()" class="w-full ai-btn py-2 rounded-lg text-sm font-semibold">
+                ✨ Generate Headlines
+            </button>
+            <div id="ai-suggestions" class="mt-2 space-y-1 hidden"></div>
+        </div>
+        
+        <!-- Templates -->
+        <div class="p-4 border-b border-white/10">
+            <h3 class="font-bold text-sm uppercase tracking-wide mb-3">🎭 Premium Templates</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="applyTemplate('cinematic')" class="h-20 rounded-lg gradient-cinematic flex items-center justify-center text-xs font-bold touch-btn">
+                    Cinematic
+                </button>
+                <button onclick="applyTemplate('neon')" class="h-20 rounded-lg bg-gradient-to-br from-purple-900 to-black border border-purple-500 flex items-center justify-center text-xs font-bold effect-neon touch-btn">
+                    Neon
+                </button>
+                <button onclick="applyTemplate('minimal')" class="h-20 rounded-lg bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center text-xs font-bold touch-btn">
+                    Minimal
+                </button>
+                <button onclick="applyTemplate('gradient')" class="h-20 rounded-lg gradient-premium-1 flex items-center justify-center text-xs font-bold touch-btn">
+                    Gradient
+                </button>
+            </div>
+        </div>
+        
+        <!-- Text Effects -->
+        <div class="p-4 border-b border-white/10">
+            <h3 class="font-bold text-sm uppercase tracking-wide mb-3">✨ Text Effects</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="setTextEffect('none')" class="p-3 rounded-lg bg-white/5 text-xs text-center touch-btn">Normal</button>
+                <button onclick="setTextEffect('neon')" class="p-3 rounded-lg bg-white/5 text-xs text-center effect-neon touch-btn">Neon</button>
+                <button onclick="setTextEffect('shadow')" class="p-3 rounded-lg bg-white/5 text-xs text-center effect-shadow touch-btn">Shadow</button>
+                <button onclick="setTextEffect('3d')" class="p-3 rounded-lg bg-white/5 text-xs text-center effect-3d touch-btn">3D</button>
+            </div>
+        </div>
+        
+        <!-- 3D Elements -->
+        <div class="p-4 border-b border-white/10">
+            <h3 class="font-bold text-sm uppercase tracking-wide mb-3">🎯 3D Elements</h3>
+            <div class="grid grid-cols-4 gap-2">
+                <button onclick="add3DElement('cube')" class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-2xl touch-btn">🎲</button>
+                <button onclick="add3DElement('sphere')" class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-2xl touch-btn">🔮</button>
+                <button onclick="add3DElement('star')" class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-2xl touch-btn">⭐</button>
+                <button onclick="add3DElement('lightning')" class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-2xl touch-btn">⚡</button>
+                <button onclick="add3DElement('fire')" class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-2xl touch-btn">🔥</button>
+                <button onclick="add3DElement('crown')" class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-2xl touch-btn relative">
+                    👑 <span class="premium-badge absolute -top-1 -right-1 text-[8px]">PRO</span>
+                </button>
+                <button onclick="add3DElement('diamond')" class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-2xl touch-btn relative">
+                    💎 <span class="premium-badge absolute -top-1 -right-1 text-[8px]">PRO</span>
+                </button>
+                <button onclick="add3DElement('rocket')" class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-2xl touch-btn relative">
+                    🚀 <span class="premium-badge absolute -top-1 -right-1 text-[8px]">PRO</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Magic Resize -->
+        <div class="p-4 safe-bottom">
+            <h3 class="font-bold text-sm uppercase tracking-wide mb-3">📐 Magic Resize</h3>
+            <div class="space-y-2">
+                <button onclick="magicResize('instagram')" class="w-full p-3 rounded-lg bg-white/5 text-left text-sm flex justify-between items-center touch-btn">
+                    <span>📱 Instagram Post</span>
+                    <span class="text-xs text-gray-500">1:1</span>
+                </button>
+                <button onclick="magicResize('pinterest')" class="w-full p-3 rounded-lg bg-white/5 text-left text-sm flex justify-between items-center touch-btn">
+                    <span>📌 Pinterest</span>
+                    <span class="text-xs text-gray-500">2:3</span>
+                </button>
+                <button onclick="magicResize('youtube')" class="w-full p-3 rounded-lg bg-white/5 text-left text-sm flex justify-between items-center touch-btn">
+                    <span>🎥 YouTube Thumb</span>
+                    <span class="text-xs text-gray-500">16:9</span>
+                </button>
+                <button onclick="magicResize('story')" class="w-full p-3 rounded-lg bg-white/5 text-left text-sm flex justify-between items-center relative touch-btn">
+                    <span>📲 Story/Reels</span>
+                    <span class="text-xs text-gray-500">9:16</span>
+                    <span class="premium-badge absolute right-2">PRO</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Center: Canvas -->
+    <div class="flex-1 flex flex-col bg-black/20 overflow-hidden">
+        
+        <!-- Canvas Toolbar -->
+        <div class="glass-panel border-b border-white/10 p-2 flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-1">
+                <button onclick="undo()" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 touch-btn" title="Undo">↩️</button>
+                <button onclick="redo()" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 touch-btn" title="Redo">↪️</button>
+                <button onclick="clearCanvas()" class="p-2 rounded-lg bg-white/5 hover:bg-red-500/20 text-red-400 touch-btn" title="Clear">🗑️</button>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-400 hidden sm:inline">Zoom:</span>
+                <input type="range" min="50" max="150" value="100" oninput="setZoom(this.value)" class="w-20 sm:w-24" style="accent-color: #667eea;">
+                <span id="zoom-level" class="text-xs text-gray-400 w-8">100%</span>
+            </div>
+            
+            <div class="flex items-center gap-1">
+                <button onclick="toggleGrid()" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 touch-btn" title="Grid">#️⃣</button>
+                <button onclick="addText()" class="sm:hidden p-2 rounded-lg bg-white/5 hover:bg-white/10 touch-btn">T</button>
+            </div>
+        </div>
         
         <!-- Canvas Area -->
-        <div class="canvas-wrapper" id="canvas-area">
-            <div class="canvas-container">
-                <canvas id="design-canvas" width="1080" height="1080" style="width: 340px; height: 340px;"></canvas>
-                
-                <!-- Floating Edit Button -->
-                <button onclick="openTextModal()" class="fab-edit">✏️</button>
-            </div>
-        </div>
-        
-        <!-- Tools Panel -->
-        <div class="tools-panel">
+        <div class="canvas-area flex-1 flex items-center justify-center p-4 sm:p-8 overflow-auto relative">
+            <canvas id="design-canvas" width="600" height="600" class="rounded-lg"></canvas>
             
-            <!-- Quick Tools -->
-            <div class="scroll-section">
-                <button onclick="openTemplateModal()" class="tool-btn">
-                    <span class="icon">🎨</span>
-                    <span>Template</span>
+            <!-- Mobile Quick Actions -->
+            <div class="sm:hidden absolute bottom-4 left-4 right-4 flex gap-2">
+                <button onclick="addText()" class="flex-1 bg-white/10 backdrop-blur py-3 rounded-xl font-semibold touch-btn">
+                    ➕ Add Text
                 </button>
-                <button onclick="openTextModal()" class="tool-btn">
-                    <span class="icon">T</span>
-                    <span>Text</span>
-                </button>
-                <button onclick="openImageModal()" class="tool-btn">
-                    <span class="icon">🖼️</span>
-                    <span>Image</span>
-                </button>
-                <button onclick="openSizeModal()" class="tool-btn">
-                    <span class="icon">📐</span>
-                    <span>Size</span>
-                </button>
-                <button onclick="openEffectModal()" class="tool-btn">
-                    <span class="icon">✨</span>
-                    <span>Effect</span>
-                </button>
-                <button onclick="openLayerModal()" class="tool-btn">
-                    <span class="icon">📚</span>
-                    <span>Layers</span>
-                </button>
-                <button onclick="openAIModal()" class="tool-btn relative">
-                    <span class="icon">🤖</span>
-                    <span>AI</span>
-                    <span class="badge-pro absolute -top-1 -right-1">PRO</span>
-                </button>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <button onclick="randomizeDesign()" class="action-btn btn-secondary">
-                    🎲 Random
-                </button>
-                <button onclick="showExportOptions()" class="action-btn btn-primary">
+                <button onclick="showExportOptions()" class="flex-1 ai-btn py-3 rounded-xl font-bold touch-btn">
                     ⬇️ Export
                 </button>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Template Modal -->
-<div id="template-modal" class="modal">
-    <div class="modal-header">
-        <h2 class="text-xl font-bold">Choose Template</h2>
-        <button onclick="closeModal('template-modal')" class="text-2xl">&times;</button>
-    </div>
-    <div class="modal-content">
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="applyTemplate('gradient')" class="h-32 rounded-xl gradient-premium-1 flex items-center justify-center font-bold">
-                Gradient
-            </button>
-            <button onclick="applyTemplate('dark')" class="h-32 rounded-xl bg-gradient-to-br from-gray-900 to-black flex items-center justify-center font-bold border border-gray-700">
-                Dark Mood
-            </button>
-            <button onclick="applyTemplate('neon')" class="h-32 rounded-xl bg-gradient-to-br from-purple-900 to-black flex items-center justify-center font-bold border border-purple-500 text-purple-300">
-                Neon
-            </button>
-            <button onclick="applyTemplate('minimal')" class="h-32 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center font-bold">
-                Minimal
-            </button>
+        
+        <!-- Desktop Bottom Bar -->
+        <div class="hidden sm:flex glass-panel border-t border-white/10 p-4">
+            <div class="flex items-center justify-between w-full max-w-4xl mx-auto">
+                <div class="flex items-center gap-2">
+                    <button onclick="addText()" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 flex items-center gap-2 touch-btn">
+                        <span>T</span> Add Text
+                    </button>
+                    <button onclick="document.getElementById('img-upload').click()" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 flex items-center gap-2 touch-btn">
+                        <span>🖼️</span> Image
+                    </button>
+                    <input type="file" id="img-upload" accept="image/*" onchange="addImage(this)" class="hidden">
+                    <button onclick="addShape()" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 flex items-center gap-2 touch-btn">
+                        <span>⬜</span> Shape
+                    </button>
+                </div>
+                
+                <button onclick="showExportOptions()" class="ai-btn px-8 py-3 rounded-full font-bold flex items-center gap-2 touch-btn">
+                    <span>⬇️</span> Export Design
+                </button>
+            </div>
         </div>
     </div>
-</div>
-
-<!-- Text Modal -->
-<div id="text-modal" class="modal">
-    <div class="modal-header">
-        <h2 class="text-xl font-bold">Add Text</h2>
-        <button onclick="closeModal('text-modal')" class="text-2xl">&times;</button>
-    </div>
-    <div class="modal-content">
-        <textarea id="text-input" class="input-field" rows="3" placeholder="Enter your headline...">YOUR HEADLINE</textarea>
+    
+    <!-- Right Sidebar: Layers -->
+    <div id="sidebar-right" class="sidebar-right glass-panel border-l border-white/10 w-80 overflow-y-auto safe-bottom">
         
-        <div class="mb-4">
-            <label class="text-sm text-gray-400 mb-2 block">Font Size</label>
-            <input type="range" id="text-size" min="24" max="120" value="64" class="w-full" style="accent-color: #667eea;">
-            <div class="flex justify-between text-xs text-gray-500 mt-1">
-                <span>Small</span>
-                <span id="size-value">64</span>
-                <span>Large</span>
+        <!-- Layers Panel -->
+        <div class="p-4 border-b border-white/10">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">📚 Layers</h3>
+                <button onclick="clearAllLayers()" class="text-xs text-red-400 hover:text-red-300 touch-btn px-2 py-1">Clear</button>
+            </div>
+            <div id="layers-list" class="space-y-2">
+                <div class="text-center text-gray-500 text-sm py-8">No layers yet</div>
             </div>
         </div>
         
-        <div class="mb-4">
-            <label class="text-sm text-gray-400 mb-2 block">Color</label>
-            <div class="color-grid">
-                <button onclick="setTextColor('#ffffff')" class="color-btn active" style="background: #fff;"></button>
-                <button onclick="setTextColor('#000000')" class="color-btn" style="background: #000; border: 1px solid #333;"></button>
-                <button onclick="setTextColor('#667eea')" class="color-btn" style="background: #667eea;"></button>
-                <button onclick="setTextColor('#f093fb')" class="color-btn" style="background: #f093fb;"></button>
-                <button onclick="setTextColor('#4facfe')" class="color-btn" style="background: #4facfe;"></button>
-                <button onclick="setTextColor('#43e97b')" class="color-btn" style="background: #43e97b;"></button>
-                <button onclick="setTextColor('#fa709a')" class="color-btn" style="background: #fa709a;"></button>
-                <button onclick="setTextColor('#fee140')" class="color-btn" style="background: #fee140;"></button>
-                <button onclick="setTextColor('#ff9a9e')" class="color-btn" style="background: #ff9a9e;"></button>
-                <button onclick="setTextColor('#30cfd0')" class="color-btn" style="background: #30cfd0;"></button>
-                <button onclick="setTextColor('#ffd700')" class="color-btn" style="background: #ffd700;"></button>
-                <input type="color" id="custom-text-color" onchange="setTextColor(this.value)" class="color-btn" style="padding: 0;">
+        <!-- Properties Panel -->
+        <div class="p-4 border-b border-white/10">
+            <h3 class="font-bold text-sm uppercase tracking-wide mb-3">⚙️ Properties</h3>
+            <div id="properties-panel">
+                <div class="text-center text-gray-500 text-sm py-4">Select an element</div>
             </div>
         </div>
         
-        <button onclick="addTextLayer()" class="w-full btn-primary py-4 rounded-xl font-bold text-lg">
-            Add to Design
-        </button>
-    </div>
-</div>
-
-<!-- Size Modal -->
-<div id="size-modal" class="modal">
-    <div class="modal-header">
-        <h2 class="text-xl font-bold">Canvas Size</h2>
-        <button onclick="closeModal('size-modal')" class="text-2xl">&times;</button>
-    </div>
-    <div class="modal-content">
-        <div class="size-options">
-            <button onclick="setCanvasSize('instagram')" class="size-btn active" data-size="instagram">
-                <span class="label">Instagram</span>
-                <span class="ratio">1080 × 1080</span>
-            </button>
-            <button onclick="setCanvasSize('pinterest')" class="size-btn" data-size="pinterest">
-                <span class="label">Pinterest</span>
-                <span class="ratio">1000 × 1500</span>
-            </button>
-            <button onclick="setCanvasSize('youtube')" class="size-btn" data-size="youtube">
-                <span class="label">YouTube</span>
-                <span class="ratio">1280 × 720</span>
-            </button>
-            <button onclick="setCanvasSize('story')" class="size-btn relative" data-size="story">
-                <span class="label">Story</span>
-                <span class="ratio">1080 × 1920</span>
-                <span class="badge-pro absolute top-2 right-2">PRO</span>
+        <!-- Brand Kit -->
+        <div class="p-4 safe-bottom">
+            <h3 class="font-bold text-sm uppercase tracking-wide mb-3">🎨 Brand Colors</h3>
+            <div class="flex gap-2 mb-3 flex-wrap">
+                <div onclick="applyBrandColor('#667eea')" class="w-10 h-10 rounded-full cursor-pointer border-2 border-transparent hover:border-white touch-btn" style="background: #667eea"></div>
+                <div onclick="applyBrandColor('#f093fb')" class="w-10 h-10 rounded-full cursor-pointer border-2 border-transparent hover:border-white touch-btn" style="background: #f093fb"></div>
+                <div onclick="applyBrandColor('#4facfe')" class="w-10 h-10 rounded-full cursor-pointer border-2 border-transparent hover:border-white touch-btn" style="background: #4facfe"></div>
+                <div onclick="applyBrandColor('#43e97b')" class="w-10 h-10 rounded-full cursor-pointer border-2 border-transparent hover:border-white touch-btn" style="background: #43e97b"></div>
+                <div onclick="applyBrandColor('#fa709a')" class="w-10 h-10 rounded-full cursor-pointer border-2 border-transparent hover:border-white touch-btn" style="background: #fa709a"></div>
+                <input type="color" onchange="applyBrandColor(this.value)" class="w-10 h-10 rounded-full cursor-pointer border-0 touch-btn" value="#667eea">
+            </div>
+            <button onclick="showBrandKit()" class="w-full py-2 rounded-lg bg-white/5 hover:bg-white/10 text-sm touch-btn">
+                Full Brand Kit
             </button>
         </div>
-    </div>
-</div>
-
-<!-- Effect Modal -->
-<div id="effect-modal" class="modal">
-    <div class="modal-header">
-        <h2 class="text-xl font-bold">Text Effects</h2>
-        <button onclick="closeModal('effect-modal')" class="text-2xl">&times;</button>
-    </div>
-    <div class="modal-content">
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="applyEffect('none')" class="effect-btn">Normal</button>
-            <button onclick="applyEffect('neon')" class="effect-btn effect-neon">Neon</button>
-            <button onclick="applyEffect('shadow')" class="effect-btn effect-shadow">Shadow</button>
-            <button onclick="applyEffect('3d')" class="effect-btn effect-3d">3D</button>
-        </div>
-    </div>
-</div>
-
-<!-- Layer Modal -->
-<div id="layer-modal" class="modal">
-    <div class="modal-header">
-        <h2 class="text-xl font-bold">Layers</h2>
-        <button onclick="closeModal('layer-modal')" class="text-2xl">&times;</button>
-    </div>
-    <div class="modal-content">
-        <div id="layer-list">
-            <div class="text-center text-gray-500 py-8">No layers yet</div>
-        </div>
-        <button onclick="clearAllLayers()" class="w-full mt-4 py-3 border border-red-500/50 text-red-400 rounded-xl">
-            Clear All
-        </button>
-    </div>
-</div>
-
-<!-- AI Modal -->
-<div id="ai-modal" class="modal">
-    <div class="modal-header">
-        <h2 class="text-xl font-bold">🤖 AI Headlines</h2>
-        <button onclick="closeModal('ai-modal')" class="text-2xl">&times;</button>
-    </div>
-    <div class="modal-content">
-        <input type="text" id="ai-topic" class="input-field" placeholder="Enter your topic (e.g., marketing, fitness)...">
-        <button onclick="generateAI()" class="w-full btn-primary py-4 rounded-xl font-bold mb-4">
-            ✨ Generate Headlines
-        </button>
-        <div id="ai-results" class="space-y-3">
-            <!-- Results appear here -->
-        </div>
-    </div>
-</div>
-
-<!-- Image Modal -->
-<div id="image-modal" class="modal">
-    <div class="modal-header">
-        <h2 class="text-xl font-bold">Add Image</h2>
-        <button onclick="closeModal('image-modal')" class="text-2xl">&times;</button>
-    </div>
-    <div class="modal-content">
-        <div class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center" onclick="document.getElementById('mobile-img-upload').click()">
-            <div class="text-4xl mb-2">🖼️</div>
-            <div class="font-semibold mb-1">Tap to upload</div>
-            <div class="text-sm text-gray-400">JPG, PNG up to 5MB</div>
-        </div>
-        <input type="file" id="mobile-img-upload" accept="image/*" onchange="handleImageUpload(this)" class="hidden">
     </div>
 </div>
 
 <!-- Export Modal -->
-<div id="export-modal" class="modal">
-    <div class="modal-header">
-        <h2 class="text-xl font-bold">Export Design</h2>
-        <button onclick="closeModal('export-modal')" class="text-2xl">&times;</button>
-    </div>
-    <div class="modal-content">
-        <div class="space-y-4">
-            <button onclick="doExport('hd')" class="w-full p-4 bg-white/5 rounded-xl flex items-center justify-between">
+<div id="export-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold">Export Design</h2>
+            <button onclick="closeModal('export-modal')" class="text-2xl touch-btn">&times;</button>
+        </div>
+        
+        <div class="space-y-3 mb-6">
+            <button onclick="exportDesign('hd')" class="w-full p-4 bg-white/5 rounded-xl flex items-center justify-between touch-btn">
                 <div>
                     <div class="font-bold">HD (1080p)</div>
                     <div class="text-sm text-gray-400">Free</div>
@@ -635,337 +378,363 @@
                 <span class="text-2xl">🖼️</span>
             </button>
             
-            <button onclick="checkProAndExport('4k')" class="w-full p-4 bg-white/5 rounded-xl flex items-center justify-between relative">
+            <button onclick="checkProExport('4k')" class="w-full p-4 bg-white/5 rounded-xl flex items-center justify-between relative touch-btn">
                 <div>
                     <div class="font-bold">4K Ultra HD</div>
                     <div class="text-sm text-gray-400">3840 × 2160</div>
                 </div>
                 <span class="text-2xl">🌟</span>
-                <span class="badge-pro absolute top-4 right-14">PRO</span>
+                <span class="premium-badge absolute top-4 right-14">PRO</span>
             </button>
             
-            <button onclick="checkProAndExport('transparent')" class="w-full p-4 bg-white/5 rounded-xl flex items-center justify-between relative">
+            <button onclick="checkProExport('transparent')" class="w-full p-4 bg-white/5 rounded-xl flex items-center justify-between relative touch-btn">
                 <div>
                     <div class="font-bold">Transparent PNG</div>
                     <div class="text-sm text-gray-400">No background</div>
                 </div>
                 <span class="text-2xl">✨</span>
-                <span class="badge-pro absolute top-4 right-14">PRO</span>
+                <span class="premium-badge absolute top-4 right-14">PRO</span>
             </button>
         </div>
         
-        <div class="mt-6 text-center text-sm text-gray-400">
-            <span id="export-remaining">7</span> free exports remaining
+        <div class="text-center text-sm text-gray-400">
+            <span id="export-uses">7</span> free exports remaining
         </div>
     </div>
 </div>
 
-<!-- Pro Upgrade Modal -->
-<div id="upgrade-modal" class="modal">
-    <div class="modal-header">
-        <h2 class="text-xl font-bold">👑 Go Pro</h2>
-        <button onclick="closeModal('upgrade-modal')" class="text-2xl">&times;</button>
+<!-- Brand Kit Modal -->
+<div id="brandkit-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl p-6 w-full max-w-md">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold">🎨 Brand Kit</h2>
+            <button onclick="closeModal('brandkit-modal')" class="text-2xl touch-btn">&times;</button>
+        </div>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">Brand Name</label>
+                <input type="text" id="brand-name" placeholder="Your Brand" class="w-full px-4 py-3 bg-black/30 border border-white/20 rounded-lg focus:border-purple-500 focus:outline-none touch-btn">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Primary Color</label>
+                <input type="color" id="brand-primary" value="#667eea" class="w-full h-12 rounded-lg cursor-pointer touch-btn">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Secondary Color</label>
+                <input type="color" id="brand-secondary" value="#764ba2" class="w-full h-12 rounded-lg cursor-pointer touch-btn">
+            </div>
+            
+            <button onclick="saveBrandKit()" class="w-full ai-btn py-3 rounded-xl font-bold touch-btn">
+                Save Brand Kit
+            </button>
+        </div>
     </div>
-    <div class="modal-content text-center">
-        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center mx-auto mb-4 text-3xl">
+</div>
+
+<!-- Upgrade Modal -->
+<div id="upgrade-modal" class="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl p-6 w-full max-w-md text-center">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center mx-auto mb-4 text-3xl">
             👑
         </div>
-        <h3 class="text-2xl font-bold mb-2">Unlock Everything</h3>
-        <p class="text-gray-400 mb-6">Unlimited exports, AI features, 4K quality, and more.</p>
+        <h2 class="text-2xl font-black mb-2">Go Pro</h2>
+        <p class="text-gray-400 mb-6">Unlock unlimited AI, 4K exports, and all premium features</p>
         
-        <div class="space-y-3 mb-6">
-            <div class="flex items-center gap-3 text-left">
-                <span class="text-green-400 text-xl">✓</span>
-                <span>Unlimited designs</span>
-            </div>
-            <div class="flex items-center gap-3 text-left">
-                <span class="text-green-400 text-xl">✓</span>
-                <span>AI headline generator</span>
-            </div>
-            <div class="flex items-center gap-3 text-left">
-                <span class="text-green-400 text-xl">✓</span>
-                <span>4K & transparent exports</span>
-            </div>
-            <div class="flex items-center gap-3 text-left">
-                <span class="text-green-400 text-xl">✓</span>
-                <span>All premium templates</span>
-            </div>
+        <div class="space-y-3 mb-6 text-left">
+            <div class="flex items-center gap-3"><span class="text-green-400">✓</span> Unlimited AI headlines</div>
+            <div class="flex items-center gap-3"><span class="text-green-400">✓</span> 4K & transparent exports</div>
+            <div class="flex items-center gap-3"><span class="text-green-400">✓</span> All 3D elements</div>
+            <div class="flex items-center gap-3"><span class="text-green-400">✓</span> Magic resize all formats</div>
         </div>
         
-        <button onclick="upgradeToPro()" class="w-full btn-primary py-4 rounded-xl font-bold text-lg mb-3">
-            Upgrade $9/month
-        </button>
-        <button onclick="closeModal('upgrade-modal')" class="text-gray-400 text-sm">
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <button onclick="selectPlan('monthly')" class="p-4 rounded-xl bg-white/5 touch-btn">
+                <div class="text-2xl font-black">$9<span class="text-sm font-normal">/mo</span></div>
+                <div class="text-xs text-gray-400">Monthly</div>
+            </button>
+            <button onclick="selectPlan('yearly')" class="p-4 rounded-xl bg-purple-500/20 border border-purple-500 touch-btn relative">
+                <div class="absolute -top-2 left-1/2 -translate-x-1/2 bg-purple-500 text-xs font-bold px-2 py-0.5 rounded-full">SAVE 40%</div>
+                <div class="text-2xl font-black">$5<span class="text-sm font-normal">/mo</span></div>
+                <div class="text-xs text-gray-400">Yearly</div>
+            </button>
+        </div>
+        
+        <button onclick="closeModal('upgrade-modal')" class="text-gray-400 text-sm touch-btn py-2">
             Continue with free
         </button>
     </div>
 </div>
 
 <!-- Toast -->
-<div id="toast" class="toast"></div>
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-black/90 text-white px-6 py-3 rounded-full text-sm opacity-0 transition-opacity pointer-events-none z-50">
+    Message
+</div>
 
 <script>
 // State
 let canvas, ctx;
 let layers = [];
-let currentLayer = null;
+let selectedLayer = null;
 let freeUses = 7;
 let isPro = false;
-let currentTemplate = 'gradient';
-let currentTextColor = '#ffffff';
-let currentEffect = 'none';
+let currentZoom = 100;
+let brandKit = { name: '', primary: '#667eea', secondary: '#764ba2' };
+
+// AI Headlines
+const aiHeadlines = {
+    business: ['Scale to 7 Figures', 'CEO Secrets Revealed', 'Profit Machine', 'Business Empire', 'Revenue Rocket'],
+    marketing: ['10X Your Sales', 'Viral Growth Hacks', 'Conversion King', 'Marketing Genius', 'Sales Explosion'],
+    fitness: ['Get Shredded Fast', 'Ultimate Physique', 'Strength Unleashed', 'Fitness Beast', 'Body Transformation'],
+    default: ['Amazing Results', 'Transform Today', 'Success Awaits', 'Dream Big', 'Make It Happen']
+};
 
 // Initialize
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     canvas = document.getElementById('design-canvas');
     ctx = canvas.getContext('2d');
     
-    // Load saved data
     const saved = localStorage.getItem('danishPosterUses');
     if (saved) freeUses = parseInt(saved);
     updateUsageDisplay();
     
-    // Initial draw
+    // Setup touch/mouse events
+    setupCanvasEvents();
     drawCanvas();
     
-    // Setup touch events for canvas
-    setupTouchEvents();
+    // Handle resize
+    window.addEventListener('resize', handleResize);
 });
 
-// Canvas Drawing
-function drawCanvas() {
-    // Clear
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw background based on template
-    const w = canvas.width;
-    const h = canvas.height;
-    
-    if (currentTemplate === 'gradient') {
-        const grd = ctx.createLinearGradient(0, 0, w, h);
-        grd.addColorStop(0, '#667eea');
-        grd.addColorStop(1, '#764ba2');
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, w, h);
-    } else if (currentTemplate === 'dark') {
-        const grd = ctx.createLinearGradient(0, 0, 0, h);
-        grd.addColorStop(0, '#1a1a2e');
-        grd.addColorStop(1, '#0f0f23');
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, w, h);
-    } else if (currentTemplate === 'neon') {
-        ctx.fillStyle = '#2d1b69';
-        ctx.fillRect(0, 0, w, h);
-        // Add glow effect
-        ctx.shadowBlur = 50;
-        ctx.shadowColor = '#667eea';
-    } else if (currentTemplate === 'minimal') {
-        ctx.fillStyle = '#1a1a2e';
-        ctx.fillRect(0, 0, w, h);
+function handleResize() {
+    // Close mobile sidebars on resize to desktop
+    if (window.innerWidth > 1024) {
+        document.getElementById('sidebar-left').classList.remove('active');
+        document.getElementById('sidebar-right').classList.remove('active');
     }
-    
-    // Draw decorative elements
-    drawDecorations();
-    
-    // Draw layers
-    layers.forEach(layer => {
-        if (layer.type === 'text') {
-            drawTextLayer(layer);
-        } else if (layer.type === 'image' && layer.img) {
-            ctx.drawImage(layer.img, layer.x, layer.y, layer.width, layer.height);
-        }
-    });
-    
-    // Reset shadow
-    ctx.shadowBlur = 0;
 }
 
-function drawDecorations() {
+function toggleSidebar(side) {
+    const left = document.getElementById('sidebar-left');
+    const right = document.getElementById('sidebar-right');
+    
+    if (side === 'left') {
+        left.classList.toggle('active');
+        right.classList.remove('active');
+    } else {
+        right.classList.toggle('active');
+        left.classList.remove('active');
+    }
+}
+
+function setupCanvasEvents() {
+    let isDragging = false;
+    let startX, startY;
+    let dragLayer = null;
+    
+    // Mouse events
+    canvas.addEventListener('mousedown', startDrag);
+    canvas.addEventListener('mousemove', drag);
+    canvas.addEventListener('mouseup', endDrag);
+    
+    // Touch events
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        startDrag({
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            rect: rect,
+            scaleX: scaleX,
+            scaleY: scaleY
+        });
+    }, { passive: false });
+    
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        drag({
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+    }, { passive: false });
+    
+    canvas.addEventListener('touchend', endDrag);
+    
+    function startDrag(e) {
+        const rect = e.rect || canvas.getBoundingClientRect();
+        const scaleX = e.scaleX || canvas.width / rect.width;
+        const scaleY = e.scaleY || canvas.height / rect.height;
+        
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+        
+        // Find clicked layer (reverse order - top first)
+        for (let i = layers.length - 1; i >= 0; i--) {
+            const layer = layers[i];
+            if (hitTest(layer, x, y)) {
+                selectedLayer = layer;
+                dragLayer = layer;
+                isDragging = true;
+                startX = x;
+                startY = y;
+                updateLayersList();
+                updatePropertiesPanel();
+                drawCanvas();
+                showToast('Selected: ' + (layer.text || layer.type).substring(0, 20));
+                return;
+            }
+        }
+        
+        selectedLayer = null;
+        updatePropertiesPanel();
+        drawCanvas();
+    }
+    
+    function drag(e) {
+        if (!isDragging || !dragLayer) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+        
+        dragLayer.x += (x - startX);
+        dragLayer.y += (y - startY);
+        
+        startX = x;
+        startY = y;
+        
+        drawCanvas();
+    }
+    
+    function endDrag() {
+        isDragging = false;
+        dragLayer = null;
+    }
+}
+
+function hitTest(layer, x, y) {
+    if (layer.type === 'text') {
+        const size = layer.size || 64;
+        const width = ctx.measureText(layer.text).width;
+        const height = size * 1.5;
+        return x > layer.x - width/2 && x < layer.x + width/2 &&
+               y > layer.y - height/2 && y < layer.y + height/2;
+    } else if (layer.type === 'image' || layer.type === 'shape') {
+        return x > layer.x && x < layer.x + layer.width &&
+               y > layer.y && y < layer.y + layer.height;
+    }
+    return false;
+}
+
+function drawCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Background
     const w = canvas.width;
     const h = canvas.height;
     
-    // Subtle geometric shapes
+    // Default gradient
+    const grd = ctx.createLinearGradient(0, 0, w, h);
+    grd.addColorStop(0, '#667eea');
+    grd.addColorStop(1, '#764ba2');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, w, h);
+    
+    // Decorative elements
     ctx.fillStyle = 'rgba(255,255,255,0.03)';
     ctx.beginPath();
     ctx.arc(w * 0.8, h * 0.2, w * 0.3, 0, Math.PI * 2);
     ctx.fill();
     
-    ctx.fillStyle = 'rgba(255,255,255,0.02)';
-    ctx.fillRect(w * 0.1, h * 0.7, w * 0.2, h * 0.2);
+    // Draw layers
+    layers.forEach(layer => {
+        if (layer.type === 'text') drawTextLayer(layer);
+        else if (layer.type === 'image' && layer.img) {
+            ctx.drawImage(layer.img, layer.x, layer.y, layer.width, layer.height);
+        }
+    });
+    
+    // Selection box
+    if (selectedLayer) {
+        ctx.strokeStyle = '#667eea';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(selectedLayer.x - 5, selectedLayer.y - 5, 
+                      (selectedLayer.width || 200) + 10, (selectedLayer.height || 100) + 10);
+    }
 }
 
 function drawTextLayer(layer) {
     ctx.save();
-    
-    // Font setup
-    const fontSize = layer.size || 64;
-    ctx.font = `bold ${fontSize}px 'Montserrat', sans-serif`;
+    ctx.font = `bold ${layer.size || 64}px 'Montserrat', sans-serif`;
     ctx.fillStyle = layer.color || '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     
-    // Effects
     if (layer.effect === 'neon') {
         ctx.shadowColor = layer.color;
         ctx.shadowBlur = 20;
     } else if (layer.effect === 'shadow') {
         ctx.shadowColor = 'rgba(0,0,0,0.5)';
-        ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 4;
         ctx.shadowOffsetY = 4;
     } else if (layer.effect === '3d') {
         ctx.shadowColor = 'rgba(0,0,0,0.3)';
-        ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 3;
         ctx.shadowOffsetY = 3;
     }
     
-    // Draw text (centered on canvas if no position set)
-    const x = layer.x || canvas.width / 2;
-    const y = layer.y || canvas.height / 2;
-    
     const lines = layer.text.split('\n');
-    const lineHeight = fontSize * 1.2;
-    const totalHeight = lines.length * lineHeight;
-    const startY = y - totalHeight / 2 + lineHeight / 2;
+    const lineHeight = (layer.size || 64) * 1.2;
+    const startY = layer.y - (lines.length - 1) * lineHeight / 2;
     
     lines.forEach((line, i) => {
-        ctx.fillText(line, x, startY + i * lineHeight);
+        ctx.fillText(line, layer.x, startY + i * lineHeight);
     });
     
     ctx.restore();
 }
 
-// Touch Events for Canvas
-function setupTouchEvents() {
-    let touchStartX, touchStartY;
-    let initialLayerX, initialLayerY;
-    
-    canvas.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        const touch = e.touches[0];
-        const rect = canvas.getBoundingClientRect();
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-        
-        touchStartX = (touch.clientX - rect.left) * scaleX;
-        touchStartY = (touch.clientY - rect.top) * scaleY;
-        
-        // Find touched layer
-        for (let i = layers.length - 1; i >= 0; i--) {
-            const layer = layers[i];
-            if (layer.type === 'text') {
-                // Approximate hit area
-                const size = layer.size || 64;
-                const width = ctx.measureText(layer.text).width;
-                const height = size * 1.5;
-                
-                if (touchStartX > layer.x - width/2 && touchStartX < layer.x + width/2 &&
-                    touchStartY > layer.y - height/2 && touchStartY < layer.y + height/2) {
-                    currentLayer = layer;
-                    initialLayerX = layer.x;
-                    initialLayerY = layer.y;
-                    showToast('Selected: ' + layer.text.substring(0, 20));
-                    updateLayerList();
-                    return;
-                }
-            }
-        }
-        currentLayer = null;
-    }, { passive: false });
-    
-    canvas.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-        if (!currentLayer) return;
-        
-        const touch = e.touches[0];
-        const rect = canvas.getBoundingClientRect();
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-        
-        const x = (touch.clientX - rect.left) * scaleX;
-        const y = (touch.clientY - rect.top) * scaleY;
-        
-        currentLayer.x = initialLayerX + (x - touchStartX);
-        currentLayer.y = initialLayerY + (y - touchStartY);
-        
-        drawCanvas();
-    }, { passive: false });
-    
-    canvas.addEventListener('touchend', function(e) {
-        currentLayer = null;
-    });
-}
-
-// Modal Functions
-function openTemplateModal() {
-    document.getElementById('template-modal').classList.add('active');
-}
-
-function openTextModal() {
-    document.getElementById('text-modal').classList.add('active');
-}
-
-function openSizeModal() {
-    document.getElementById('size-modal').classList.add('active');
-}
-
-function openEffectModal() {
-    if (layers.filter(l => l.type === 'text').length === 0) {
-        showToast('Add text first!');
-        return;
-    }
-    document.getElementById('effect-modal').classList.add('active');
-}
-
-function openLayerModal() {
-    updateLayerList();
-    document.getElementById('layer-modal').classList.add('active');
-}
-
-function openAIModal() {
-    if (!isPro && freeUses <= 0) {
-        showUpgradeModal();
-        return;
-    }
-    document.getElementById('ai-modal').classList.add('active');
-}
-
-function openImageModal() {
-    if (freeUses <= 0 && !isPro) {
-        showUpgradeModal();
-        return;
-    }
-    document.getElementById('image-modal').classList.add('active');
-}
-
-function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-}
-
-// Template Functions
+// Template functions
 function applyTemplate(template) {
-    currentTemplate = template;
-    drawCanvas();
-    closeModal('template-modal');
-    showToast('Template applied!');
-}
-
-// Text Functions
-function setTextColor(color) {
-    currentTextColor = color;
-    document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-}
-
-function addTextLayer() {
-    const text = document.getElementById('text-input').value;
-    const size = parseInt(document.getElementById('text-size').value);
+    // Templates change canvas background style
+    const templates = {
+        cinematic: ['#1a1a2e', '#16213e'],
+        neon: ['#2d1b69', '#0f0f23'],
+        minimal: ['#1a1a2e', '#0f0f23'],
+        gradient: ['#667eea', '#764ba2']
+    };
     
-    if (!text.trim()) {
-        showToast('Please enter text');
+    const colors = templates[template] || templates.gradient;
+    canvas.style.background = `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`;
+    
+    drawCanvas();
+    showToast(template + ' template applied!');
+    
+    // Close mobile sidebar
+    if (window.innerWidth <= 1024) {
+        document.getElementById('sidebar-left').classList.remove('active');
+    }
+}
+
+// Text functions
+function addText() {
+    if (freeUses <= 0 && !isPro) {
+        showUpgrade();
         return;
     }
+    
+    const text = prompt("Enter your headline:", "YOUR HEADLINE");
+    if (!text) return;
     
     const layer = {
         id: Date.now(),
@@ -973,29 +742,72 @@ function addTextLayer() {
         text: text,
         x: canvas.width / 2,
         y: canvas.height / 2,
-        size: size,
-        color: currentTextColor,
-        effect: currentEffect
+        size: 64,
+        color: '#ffffff',
+        effect: 'none'
     };
     
     layers.push(layer);
+    selectedLayer = layer;
+    updateLayersList();
+    updatePropertiesPanel();
     drawCanvas();
-    updateLayerList();
-    closeModal('text-modal');
     showToast('Text added! Drag to move');
 }
 
-// Size Functions
-function setCanvasSize(platform) {
+function setTextEffect(effect) {
+    if (selectedLayer && selectedLayer.type === 'text') {
+        selectedLayer.effect = effect;
+        drawCanvas();
+        showToast('Effect applied!');
+    } else {
+        showToast('Select text first');
+    }
+}
+
+// 3D Elements
+function add3DElement(element) {
+    const proElements = ['crown', 'diamond', 'rocket'];
+    if (proElements.includes(element) && !isPro) {
+        showUpgrade();
+        return;
+    }
+    
+    const emojis = {
+        cube: '🎲', sphere: '🔮', star: '⭐', lightning: '⚡',
+        fire: '🔥', crown: '👑', diamond: '💎', rocket: '🚀'
+    };
+    
+    // Create as text layer with emoji
+    const layer = {
+        id: Date.now(),
+        type: 'text',
+        text: emojis[element],
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        size: 80,
+        color: '#ffffff',
+        effect: 'none'
+    };
+    
+    layers.push(layer);
+    selectedLayer = layer;
+    updateLayersList();
+    drawCanvas();
+    showToast('Element added!');
+}
+
+// Magic Resize
+function magicResize(platform) {
     const sizes = {
-        instagram: { w: 1080, h: 1080, display: 340 },
-        pinterest: { w: 1000, h: 1500, display: 255 },
-        youtube: { w: 1280, h: 720, display: 340 },
-        story: { w: 1080, h: 1920, display: 191 }
+        instagram: { w: 1080, h: 1080 },
+        pinterest: { w: 1000, h: 1500 },
+        youtube: { w: 1280, h: 720 },
+        story: { w: 1080, h: 1920 }
     };
     
     if (platform === 'story' && !isPro) {
-        showUpgradeModal();
+        showUpgrade();
         return;
     }
     
@@ -1003,120 +815,81 @@ function setCanvasSize(platform) {
     canvas.width = size.w;
     canvas.height = size.h;
     
-    // Update display size
-    canvas.style.width = size.display + 'px';
-    canvas.style.height = (size.display * (size.h/size.w)) + 'px';
-    
-    // Update active button
-    document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`[data-size="${platform}"]`).classList.add('active');
+    // Center layers
+    layers.forEach(layer => {
+        layer.x = size.w / 2;
+        layer.y = size.h / 2;
+    });
     
     drawCanvas();
-    closeModal('size-modal');
-    showToast('Size changed!');
-}
-
-// Effect Functions
-function applyEffect(effect) {
-    currentEffect = effect;
-    
-    // Apply to last text layer
-    const textLayers = layers.filter(l => l.type === 'text');
-    if (textLayers.length > 0) {
-        textLayers[textLayers.length - 1].effect = effect;
-        drawCanvas();
-    }
-    
-    closeModal('effect-modal');
-    showToast('Effect applied!');
-}
-
-// Layer Management
-function updateLayerList() {
-    const list = document.getElementById('layer-list');
-    if (layers.length === 0) {
-        list.innerHTML = '<div class="text-center text-gray-500 py-8">No layers yet</div>';
-        return;
-    }
-    
-    list.innerHTML = layers.slice().reverse().map(layer => `
-        <div class="layer-item ${currentLayer === layer ? 'active' : ''}" onclick="selectLayer(${layer.id})">
-            <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                ${layer.type === 'text' ? 'T' : '🖼️'}
-            </div>
-            <div class="flex-1">
-                <div class="font-medium">${layer.type === 'text' ? layer.text.substring(0, 20) : 'Image'}</div>
-                <div class="text-xs text-gray-400">${layer.type}</div>
-            </div>
-            <button onclick="event.stopPropagation(); deleteLayer(${layer.id})" class="text-red-400 p-2">🗑️</button>
-        </div>
-    `).join('');
-}
-
-function selectLayer(id) {
-    currentLayer = layers.find(l => l.id === id);
-    updateLayerList();
-}
-
-function deleteLayer(id) {
-    layers = layers.filter(l => l.id !== id);
-    if (currentLayer && currentLayer.id === id) currentLayer = null;
-    drawCanvas();
-    updateLayerList();
-}
-
-function clearAllLayers() {
-    layers = [];
-    currentLayer = null;
-    drawCanvas();
-    updateLayerList();
-    closeModal('layer-modal');
-    showToast('All cleared');
+    showToast('Resized to ' + platform);
 }
 
 // AI Functions
-function generateAI() {
+function generateAIHeadline() {
+    if (!isPro && freeUses <= 0) {
+        showUpgrade();
+        return;
+    }
+    
     const topic = document.getElementById('ai-topic').value.toLowerCase();
     if (!topic) {
         showToast('Enter a topic first');
         return;
     }
     
-    const headlines = {
-        business: ['Scale to 7 Figures', 'CEO Secrets Revealed', 'Profit Machine'],
-        marketing: ['10X Your Sales', 'Viral Growth Hacks', 'Conversion King'],
-        fitness: ['Get Shredded Fast', 'Ultimate Physique', 'Strength Unleashed'],
-        default: ['Amazing Results', 'Transform Today', 'Success Awaits']
-    };
+    let category = 'default';
+    if (topic.includes('business') || topic.includes('money')) category = 'business';
+    else if (topic.includes('market') || topic.includes('sell')) category = 'marketing';
+    else if (topic.includes('fit') || topic.includes('gym')) category = 'fitness';
     
-    const category = headlines[topic] || headlines[topic.includes('market') ? 'marketing' : 
-                                          topic.includes('fit') ? 'fitness' : 
-                                          topic.includes('business') ? 'business' : 'default'];
+    const headlines = aiHeadlines[category];
+    const suggestions = headlines.slice(0, 3);
     
-    const results = document.getElementById('ai-results');
-    results.innerHTML = category.map(h => `
-        <button onclick="useAIHeadline('${h}')" class="w-full p-4 bg-white/5 rounded-xl text-left hover:bg-white/10">
-            <div class="font-bold text-lg">${h}</div>
-            <div class="text-sm text-gray-400">Tap to use</div>
+    const div = document.getElementById('ai-suggestions');
+    div.innerHTML = suggestions.map(h => `
+        <button onclick="useAIHeadline('${h}')" class="w-full text-left p-2 rounded bg-white/5 hover:bg-white/10 text-sm mb-1 touch-btn">
+            ${h}
         </button>
     `).join('');
+    div.classList.remove('hidden');
 }
 
 function useAIHeadline(headline) {
-    document.getElementById('text-input').value = headline;
-    closeModal('ai-modal');
-    openTextModal();
+    const layer = {
+        id: Date.now(),
+        type: 'text',
+        text: headline,
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        size: 72,
+        color: '#ffffff',
+        effect: 'neon'
+    };
+    
+    layers.push(layer);
+    selectedLayer = layer;
+    updateLayersList();
+    drawCanvas();
+    
+    document.getElementById('ai-suggestions').classList.add('hidden');
+    showToast('AI headline added!');
 }
 
-// Image Functions
-function handleImageUpload(input) {
+// Image functions
+function addImage(input) {
+    if (freeUses <= 0 && !isPro) {
+        showUpgrade();
+        return;
+    }
+    
     const file = input.files[0];
     if (!file) return;
     
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = (e) => {
         const img = new Image();
-        img.onload = function() {
+        img.onload = () => {
             const layer = {
                 id: Date.now(),
                 type: 'image',
@@ -1127,9 +900,9 @@ function handleImageUpload(input) {
                 height: 300 * (img.height / img.width)
             };
             layers.push(layer);
+            selectedLayer = layer;
+            updateLayersList();
             drawCanvas();
-            updateLayerList();
-            closeModal('image-modal');
             showToast('Image added!');
         };
         img.src = e.target.result;
@@ -1137,13 +910,203 @@ function handleImageUpload(input) {
     reader.readAsDataURL(file);
 }
 
-// Randomize
-function randomizeDesign() {
-    const templates = ['gradient', 'dark', 'neon', 'minimal'];
-    currentTemplate = templates[Math.floor(Math.random() * templates.length)];
+function addShape() {
+    const layer = {
+        id: Date.now(),
+        type: 'shape',
+        x: canvas.width / 2 - 50,
+        y: canvas.height / 2 - 50,
+        width: 100,
+        height: 100,
+        color: '#667eea'
+    };
+    layers.push(layer);
+    selectedLayer = layer;
+    updateLayersList();
+    drawCanvas();
+}
+
+// Layer Management
+function updateLayersList() {
+    const list = document.getElementById('layers-list');
+    if (layers.length === 0) {
+        list.innerHTML = '<div class="text-center text-gray-500 text-sm py-8">No layers yet</div>';
+        return;
+    }
     
-    const headlines = ['BOOM!', 'SUCCESS', 'EPIC WIN', 'LET\'S GO', 'UNSTOPPABLE'];
-    const colors = ['#ffffff', '#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1'];
+    list.innerHTML = layers.slice().reverse().map(layer => `
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5 ${selectedLayer === layer ? 'ring-1 ring-purple-500' : ''}" onclick="selectLayer(${layer.id})">
+            <div class="w-10 h-10 rounded bg-white/10 flex items-center justify-center text-lg">
+                ${layer.type === 'text' ? 'T' : layer.type === 'image' ? '🖼️' : '⬜'}
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="font-medium text-sm truncate">${layer.text || layer.type}</div>
+                <div class="text-xs text-gray-400 capitalize">${layer.type}</div>
+            </div>
+            <button onclick="event.stopPropagation(); deleteLayer(${layer.id})" class="text-red-400 p-2 touch-btn">🗑️</button>
+        </div>
+    `).join('');
+}
+
+function selectLayer(id) {
+    selectedLayer = layers.find(l => l.id === id);
+    updateLayersList();
+    updatePropertiesPanel();
+    drawCanvas();
+}
+
+function deleteLayer(id) {
+    layers = layers.filter(l => l.id !== id);
+    if (selectedLayer?.id === id) selectedLayer = null;
+    updateLayersList();
+    updatePropertiesPanel();
+    drawCanvas();
+}
+
+function clearAllLayers() {
+    layers = [];
+    selectedLayer = null;
+    updateLayersList();
+    updatePropertiesPanel();
+    drawCanvas();
+    showToast('All cleared');
+}
+
+// Properties Panel
+function updatePropertiesPanel() {
+    const panel = document.getElementById('properties-panel');
+    if (!selectedLayer) {
+        panel.innerHTML = '<div class="text-center text-gray-500 text-sm py-4">Select an element</div>';
+        return;
+    }
+    
+    if (selectedLayer.type === 'text') {
+        panel.innerHTML = `
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-gray-400">Text</label>
+                    <textarea onchange="updateLayerText(this.value)" class="w-full px-3 py-2 bg-black/30 rounded-lg text-sm focus:border-purple-500 focus:outline-none" rows="2">${selectedLayer.text}</textarea>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Size: <span id="prop-size">${selectedLayer.size}</span></label>
+                    <input type="range" min="12" max="120" value="${selectedLayer.size}" oninput="updateLayerSize(this.value)" class="w-full" style="accent-color: #667eea;">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Color</label>
+                    <input type="color" value="${selectedLayer.color}" onchange="updateLayerColor(this.value)" class="w-full h-10 rounded-lg cursor-pointer">
+                </div>
+            </div>
+        `;
+    }
+}
+
+function updateLayerText(text) {
+    if (selectedLayer) {
+        selectedLayer.text = text;
+        drawCanvas();
+        updateLayersList();
+    }
+}
+
+function updateLayerSize(size) {
+    if (selectedLayer) {
+        selectedLayer.size = parseInt(size);
+        document.getElementById('prop-size').textContent = size;
+        drawCanvas();
+    }
+}
+
+function updateLayerColor(color) {
+    if (selectedLayer) {
+        selectedLayer.color = color;
+        drawCanvas();
+    }
+}
+
+// Brand Kit
+function showBrandKit() {
+    document.getElementById('brandkit-modal').classList.remove('hidden');
+}
+
+function saveBrandKit() {
+    brandKit.name = document.getElementById('brand-name').value;
+    brandKit.primary = document.getElementById('brand-primary').value;
+    brandKit.secondary = document.getElementById('brand-secondary').value;
+    localStorage.setItem('danishBrandKit', JSON.stringify(brandKit));
+    closeModal('brandkit-modal');
+    showToast('Brand Kit saved!');
+}
+
+function applyBrandColor(color) {
+    if (selectedLayer) {
+        selectedLayer.color = color;
+        drawCanvas();
+        updatePropertiesPanel();
+    }
+}
+
+// Export
+function showExportOptions() {
+    document.getElementById('export-uses').textContent = freeUses;
+    document.getElementById('export-modal').classList.remove('hidden');
+}
+
+function checkProExport(type) {
+    if (!isPro) {
+        closeModal('export-modal');
+        showUpgrade();
+        return;
+    }
+    exportDesign(type);
+}
+
+function exportDesign(type) {
+    if (freeUses <= 0 && !isPro) {
+        showUpgrade();
+        return;
+    }
+    
+    showToast('Creating export...');
+    
+    setTimeout(() => {
+        const scale = type === '4k' ? 2 : 1;
+        const exportCanvas = document.createElement('canvas');
+        exportCanvas.width = canvas.width * scale;
+        exportCanvas.height = canvas.height * scale;
+        const eCtx = exportCanvas.getContext('2d');
+        
+        eCtx.scale(scale, scale);
+        eCtx.drawImage(canvas, 0, 0);
+        
+        const link = document.createElement('a');
+        link.download = `danish-poster-${Date.now()}.png`;
+        link.href = exportCanvas.toDataURL('image/png', 1.0);
+        link.click();
+        
+        if (!isPro) {
+            freeUses--;
+            localStorage.setItem('danishPosterUses', freeUses);
+            updateUsageDisplay();
+        }
+        
+        closeModal('export-modal');
+        showToast('Downloaded!');
+    }, 500);
+}
+
+// Utilities
+function undo() { showToast('Undo: Coming in Pro'); }
+function redo() { showToast('Redo: Coming in Pro'); }
+function clearCanvas() { clearAllLayers(); }
+function setZoom(val) { currentZoom = val; canvas.style.transform = `scale(${val/100})`; document.getElementById('zoom-level').textContent = val + '%'; }
+function toggleGrid() { showToast('Grid toggled'); }
+
+function randomizeDesign() {
+    const templates = ['cinematic', 'neon', 'minimal', 'gradient'];
+    applyTemplate(templates[Math.floor(Math.random() * templates.length)]);
+    
+    const headlines = ['BOOM!', 'SUCCESS', 'EPIC', 'WIN', 'UNSTOPPABLE'];
+    const colors = ['#ffffff', '#ffd700', '#ff6b6b', '#4ecdc4'];
     
     const layer = {
         id: Date.now(),
@@ -1157,100 +1120,56 @@ function randomizeDesign() {
     };
     
     layers = [layer];
+    selectedLayer = layer;
+    updateLayersList();
+    updatePropertiesPanel();
     drawCanvas();
-    updateLayerList();
-    showToast('Random design created!');
 }
 
-// Export Functions
-function showExportOptions() {
-    document.getElementById('export-remaining').textContent = freeUses;
-    document.getElementById('export-modal').classList.add('active');
+function showUpgrade() {
+    document.getElementById('upgrade-modal').classList.remove('hidden');
 }
 
-function checkProAndExport(type) {
-    if (!isPro) {
-        closeModal('export-modal');
-        showUpgradeModal();
-        return;
-    }
-    doExport(type);
-}
-
-function doExport(type) {
-    if (freeUses <= 0 && !isPro) {
-        showUpgradeModal();
-        return;
-    }
-    
-    // Show processing
-    showToast('Creating high-res export...');
-    
-    setTimeout(() => {
-        // Create high-res canvas
-        const scale = type === '4k' ? 2 : 1;
-        const exportCanvas = document.createElement('canvas');
-        exportCanvas.width = canvas.width * scale;
-        exportCanvas.height = canvas.height * scale;
-        const eCtx = exportCanvas.getContext('2d');
-        
-        // Scale and redraw everything
-        eCtx.scale(scale, scale);
-        
-        // Redraw with high quality
-        // (Simplified - full version would redraw all layers at high res)
-        eCtx.drawImage(canvas, 0, 0);
-        
-        // Download
-        const link = document.createElement('a');
-        link.download = `danish-poster-${Date.now()}.png`;
-        link.href = exportCanvas.toDataURL('image/png', 1.0);
-        link.click();
-        
-        // Update usage
-        if (!isPro) {
-            freeUses--;
-            localStorage.setItem('danishPosterUses', freeUses);
-            updateUsageDisplay();
-        }
-        
-        closeModal('export-modal');
-        showToast('Downloaded!');
-    }, 500);
-}
-
-// Upgrade
-function showUpgradeModal() {
-    document.getElementById('upgrade-modal').classList.add('active');
-}
-
-function upgradeToPro() {
-    // In production: redirect to Stripe
+function selectPlan(plan) {
     showToast('Redirecting to payment...');
     setTimeout(() => {
         isPro = true;
         closeModal('upgrade-modal');
         showToast('Welcome to Pro! 🎉');
+        updateUsageDisplay();
     }, 1500);
 }
 
-// Utilities
+function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+}
+
 function updateUsageDisplay() {
-    document.getElementById('free-count').textContent = freeUses;
+    document.getElementById('free-uses').textContent = freeUses;
 }
 
-function showToast(message) {
+function showToast(msg) {
     const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
+    toast.textContent = msg;
+    toast.classList.remove('opacity-0');
+    setTimeout(() => toast.classList.add('opacity-0'), 2500);
 }
 
-// Prevent bounce on iOS
-document.addEventListener('touchmove', function(e) {
-    if (e.target.closest('.modal-content') || e.target.closest('.tools-panel')) return;
-    e.preventDefault();
-}, { passive: false });
+// Close sidebars when clicking outside
+document.addEventListener('click', (e) => {
+    if (window.innerWidth > 1024) return;
+    
+    const left = document.getElementById('sidebar-left');
+    const right = document.getElementById('sidebar-right');
+    const target = e.target;
+    
+    if (!target.closest('#sidebar-left') && !target.closest('.mobile-menu-btn')) {
+        left.classList.remove('active');
+    }
+    if (!target.closest('#sidebar-right') && !target.closest('.mobile-menu-btn')) {
+        right.classList.remove('active');
+    }
+});
 </script>
 
 </body>
